@@ -3,216 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>In Submit Tracker Pro</title>
+    <title>In Submit Tracker Live</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-body: #f0f2f5;
-            --bg-card: #ffffff;
-            --text-main: #1c1e21;
-            --text-sub: #606770;
-            --primary: #007bff;
-            --danger: #dc3545;
-            --border: #ddd;
+            --bg-body: #121212; --bg-card: #1e1e1e; --text-main: #e0e0e0;
+            --text-sub: #a0a0a0; --primary: #3700b3; --danger: #cf6679; --success: #03dac6; --border: #333;
         }
-
-        [data-theme="dark"] {
-            --bg-body: #18191a;
-            --bg-card: #242526;
-            --text-main: #e4e6eb;
-            --text-sub: #b0b3b8;
-            --primary: #2d88ff;
-            --border: #3e4042;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            background-color: var(--bg-body);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-            transition: 0.3s;
-        }
-
-        .container { max-width: 1300px; margin: 0 auto; }
-
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            padding: 15px;
-            background: var(--bg-card);
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .controls { display: flex; gap: 15px; align-items: center; }
-
-        select, input, button {
-            padding: 8px 12px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: var(--bg-card);
-            color: var(--text-main);
-        }
-
-        .shift-section {
-            margin-bottom: 40px;
-        }
-
-        .shift-title {
-            font-size: 24px;
-            border-right: 5px solid var(--primary);
-            padding-right: 15px;
-            margin-bottom: 20px;
-            color: var(--primary);
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--bg-card);
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            overflow: hidden;
-        }
-
-        .card-header {
-            background: rgba(0,0,0,0.03);
-            padding: 12px 15px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-        }
-
-        .user-item {
-            padding: 10px 15px;
-            border-bottom: 1px dotted var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .user-email { font-weight: 600; color: var(--danger); font-size: 14px; }
-        .user-meta { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
-
-        .theme-toggle { cursor: pointer; font-size: 20px; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; }
+        header { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
+        .controls { display: flex; gap: 10px; align-items: center; }
+        select, input { background: #2c2c2c; color: white; border: 1px solid var(--border); padding: 8px; border-radius: 5px; }
         
-        .loader { 
-            display: none; text-align: center; padding: 50px; font-size: 20px; 
-        }
+        .shift-block { margin-bottom: 30px; }
+        .shift-header { font-size: 22px; color: var(--success); margin-bottom: 15px; border-bottom: 2px solid var(--primary); display: inline-block; }
+        
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+        .room-card { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+        .room-name { background: #252525; padding: 10px; text-align: center; font-weight: bold; border-bottom: 1px solid var(--border); }
+        
+        .split-view { display: flex; min-height: 200px; }
+        .column { flex: 1; padding: 10px; border-right: 1px solid var(--border); }
+        .column:last-child { border-right: none; }
+        .col-title { font-size: 14px; text-align: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
+        
+        .user-box { padding: 8px; border-radius: 4px; margin-bottom: 5px; font-size: 12px; border: 1px solid transparent; }
+        .not-sub { border-color: rgba(207, 102, 121, 0.3); background: rgba(207, 102, 121, 0.05); }
+        .sub { border-color: rgba(3, 218, 198, 0.3); background: rgba(3, 218, 198, 0.05); }
+        
+        .email { display: block; font-weight: bold; margin-bottom: 2px; }
+        .not-sub .email { color: var(--danger); }
+        .sub .email { color: var(--success); }
+        .meta { color: var(--text-sub); font-size: 10px; }
+
+        .status-dot { height: 10px; width: 10px; background-color: var(--success); border-radius: 50%; display: inline-block; margin-left: 5px; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h2><i class="fas fa-clipboard-check"></i> In Submit Tracker</h2>
-        <div class="controls">
-            <input type="date" id="datePicker">
-            <button onclick="fetchData()"><i class="fas fa-sync"></i> تحديث</button>
-            <div class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></div>
-        </div>
-    </header>
+<header>
+    <div><span class="status-dot"></span> <b>In Submit Tracker (Live)</b></div>
+    <div class="controls">
+        <select id="shiftFilter" onchange="renderCurrentData()">
+            <option value="all">كل الشيفتات</option>
+        </select>
+        <input type="date" id="datePicker" onchange="fetchData()">
+        <button onclick="fetchData()" style="cursor:pointer; background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:5px;">تحديث يدوي</button>
+    </div>
+</header>
 
-    <div id="loader" class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...</div>
-    <div id="content"></div>
-</div>
+<div id="content"></div>
 
 <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec'; // ضعه هنا
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec'; 
+    let globalData = {};
 
-    // ضبط تاريخ اليوم تلقائياً
     window.onload = () => {
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('datePicker').value = today;
-        
-        // استعادة الثيم
-        if(localStorage.getItem('theme') === 'dark') toggleTheme();
+        document.getElementById('datePicker').value = new Date().toISOString().split('T')[0];
         fetchData();
+        // تحديث تلقائي كل 5 ثواني
+        setInterval(fetchData, 5000);
     };
 
-    function toggleTheme() {
-        const body = document.body;
-        const icon = document.getElementById('themeIcon');
-        if(body.hasAttribute('data-theme')) {
-            body.removeAttribute('data-theme');
-            icon.className = 'fas fa-moon';
-            localStorage.setItem('theme', 'light');
-        } else {
-            body.setAttribute('data-theme', 'dark');
-            icon.className = 'fas fa-sun';
-            localStorage.setItem('theme', 'dark');
-        }
-    }
-
     async function fetchData() {
-        const dateInput = document.getElementById('datePicker').value;
-        // تحويل التاريخ لصيغة dd-mm-yyyy للـ API
-        const formattedDate = dateInput.split('-').reverse().join('-');
-        
-        const content = document.getElementById('content');
-        const loader = document.getElementById('loader');
-        
-        content.innerHTML = '';
-        loader.style.display = 'block';
-
+        const date = document.getElementById('datePicker').value.split('-').reverse().join('-');
         try {
-            const res = await fetch(`${API_URL}?date=${formattedDate}`);
-            const result = await res.json();
-            loader.style.display = 'none';
-
-            if (!result.data || Object.keys(result.data).length === 0) {
-                content.innerHTML = '<h3 style="text-align:center">🎉 لا يوجد متأخرين لهذا اليوم!</h3>';
-                return;
-            }
-
-            renderData(result.data);
-        } catch (e) {
-            loader.style.display = 'none';
-            alert("خطأ في جلب البيانات");
-        }
+            const res = await fetch(`${API_URL}?date=${date}`);
+            const json = await res.json();
+            globalData = json.data;
+            updateShiftFilter();
+            renderCurrentData();
+        } catch (e) { console.error("Update failed"); }
     }
 
-    function renderData(shifts) {
+    function updateShiftFilter() {
+        const filter = document.getElementById('shiftFilter');
+        const currentVal = filter.value;
+        filter.innerHTML = '<option value="all">كل الشيفتات</option>';
+        Object.keys(globalData).forEach(s => {
+            filter.innerHTML += `<option value="${s}" ${s === currentVal ? 'selected' : ''}>شيفت: ${s}</option>`;
+        });
+    }
+
+    function renderCurrentData() {
+        const filter = document.getElementById('shiftFilter').value;
         const content = document.getElementById('content');
-        
-        for (const [shiftName, locations] of Object.entries(shifts)) {
-            const shiftSection = document.createElement('div');
-            shiftSection.className = 'shift-section';
-            shiftSection.innerHTML = `<div class="shift-title">شيفت: ${shiftName}</div>`;
+        content.innerHTML = '';
+
+        for (const [shift, locations] of Object.entries(globalData)) {
+            if (filter !== 'all' && shift !== filter) continue;
+
+            const section = document.createElement('div');
+            section.className = 'shift-block';
+            section.innerHTML = `<div class="shift-header">شيفت: ${shift}</div>`;
             
             const grid = document.createElement('div');
             grid.className = 'grid';
 
-            for (const [locName, users] of Object.entries(locations)) {
+            for (const [loc, type] of Object.entries(locations)) {
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = 'room-card';
                 card.innerHTML = `
-                    <div class="card-header">
-                        <span>${locName}</span>
-                        <span style="color:var(--danger)">${users.length}</span>
-                    </div>
-                    <div class="card-body">
-                        ${users.map(u => `
-                            <div class="user-item">
-                                <span class="user-email">${u.email}</span>
-                                <span class="user-meta">TL: ${u.tl} | PC: ${u.pc}</span>
-                            </div>
-                        `).join('')}
+                    <div class="room-name">${loc}</div>
+                    <div class="split-view">
+                        <div class="column">
+                            <div class="col-title" style="color:var(--danger)">Not Submit (${type.notSubmitted.length})</div>
+                            ${type.notSubmitted.map(u => createUserBox(u, 'not-sub')).join('')}
+                        </div>
+                        <div class="column">
+                            <div class="col-title" style="color:var(--success)">Submitted (${type.submitted.length})</div>
+                            ${type.submitted.map(u => createUserBox(u, 'sub')).join('')}
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
             }
-            
-            shiftSection.appendChild(grid);
-            content.appendChild(shiftSection);
+            section.appendChild(grid);
+            content.appendChild(section);
         }
+    }
+
+    function createUserBox(u, className) {
+        return `
+            <div class="user-box ${className}">
+                <span class="email">${u.email}</span>
+                <span class="meta">TL: ${u.tl} | PC: ${u.pc}</span>
+            </div>
+        `;
     }
 </script>
 </body>
