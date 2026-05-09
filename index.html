@@ -1,114 +1,253 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>In Submit Tracker Live</title>
+    <title>In Submit Tracker | Live Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --bg-body: #121212; --bg-card: #1e1e1e; --text-main: #e0e0e0;
-            --text-sub: #a0a0a0; --primary: #3700b3; --danger: #cf6679; --success: #03dac6; --border: #333;
+            --bg-body: #121212; 
+            --bg-card: #1e1e1e; 
+            --text-main: #e0e0e0;
+            --text-sub: #a0a0a0; 
+            --primary: #3700b3; 
+            --danger: #cf6679; 
+            --success: #03dac6; 
+            --border: #333;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; }
-        header { display: flex; justify-content: space-between; align-items: center; background: var(--bg-card); padding: 15px; border-radius: 10px; margin-bottom: 20px; }
-        .controls { display: flex; gap: 10px; align-items: center; }
-        select, input { background: #2c2c2c; color: white; border: 1px solid var(--border); padding: 8px; border-radius: 5px; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: var(--bg-body); 
+            color: var(--text-main); 
+            margin: 0; 
+            padding: 20px; 
+        }
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            background: var(--bg-card); 
+            padding: 15px 25px; 
+            border-radius: 12px; 
+            margin-bottom: 25px;
+            border: 1px solid var(--border);
+        }
+        .controls { display: flex; gap: 12px; align-items: center; }
         
-        .shift-block { margin-bottom: 30px; }
-        .shift-header { font-size: 22px; color: var(--success); margin-bottom: 15px; border-bottom: 2px solid var(--primary); display: inline-block; }
+        select, input { 
+            background: #2c2c2c; 
+            color: white; 
+            border: 1px solid var(--border); 
+            padding: 10px; 
+            border-radius: 8px;
+            outline: none;
+        }
         
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
-        .room-card { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
-        .room-name { background: #252525; padding: 10px; text-align: center; font-weight: bold; border-bottom: 1px solid var(--border); }
+        .btn-refresh {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .btn-refresh:hover { opacity: 0.8; }
+
+        .shift-block { margin-bottom: 40px; }
+        .shift-header { 
+            font-size: 24px; 
+            color: var(--success); 
+            margin-bottom: 20px; 
+            padding-left: 15px;
+            border-left: 4px solid var(--primary);
+            text-transform: uppercase;
+        }
         
-        .split-view { display: flex; min-height: 200px; }
-        .column { flex: 1; padding: 10px; border-right: 1px solid var(--border); }
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); 
+            gap: 25px; 
+        }
+        .room-card { 
+            background: var(--bg-card); 
+            border-radius: 12px; 
+            border: 1px solid var(--border); 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            overflow: hidden; 
+        }
+        .room-name { 
+            background: #252525; 
+            padding: 12px; 
+            text-align: center; 
+            font-weight: bold; 
+            font-size: 18px;
+            border-bottom: 1px solid var(--border); 
+            color: var(--success);
+        }
+        
+        .split-view { display: flex; min-height: 250px; }
+        .column { flex: 1; padding: 15px; border-right: 1px solid var(--border); }
         .column:last-child { border-right: none; }
-        .col-title { font-size: 14px; text-align: center; margin-bottom: 10px; padding-bottom: 5px; border-bottom: 1px solid var(--border); }
         
-        .user-box { padding: 8px; border-radius: 4px; margin-bottom: 5px; font-size: 12px; border: 1px solid transparent; }
-        .not-sub { border-color: rgba(207, 102, 121, 0.3); background: rgba(207, 102, 121, 0.05); }
-        .sub { border-color: rgba(3, 218, 198, 0.3); background: rgba(3, 218, 198, 0.05); }
+        .col-title { 
+            font-size: 14px; 
+            text-align: center; 
+            margin-bottom: 15px; 
+            padding-bottom: 8px; 
+            border-bottom: 1px solid var(--border);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
         
-        .email { display: block; font-weight: bold; margin-bottom: 2px; }
+        .user-box { 
+            padding: 10px; 
+            border-radius: 6px; 
+            margin-bottom: 8px; 
+            font-size: 13px; 
+            border-left: 3px solid transparent;
+        }
+        .not-sub { background: rgba(207, 102, 121, 0.08); border-left-color: var(--danger); }
+        .sub { background: rgba(3, 218, 198, 0.08); border-left-color: var(--success); }
+        
+        .email { display: block; font-weight: bold; margin-bottom: 3px; word-break: break-all; }
         .not-sub .email { color: var(--danger); }
         .sub .email { color: var(--success); }
-        .meta { color: var(--text-sub); font-size: 10px; }
+        .meta { color: var(--text-sub); font-size: 11px; }
 
-        .status-dot { height: 10px; width: 10px; background-color: var(--success); border-radius: 50%; display: inline-block; margin-left: 5px; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        .status-dot { 
+            height: 12px; width: 12px; 
+            background-color: var(--success); 
+            border-radius: 50%; 
+            box-shadow: 0 0 8px var(--success);
+            animation: pulse 2s infinite; 
+        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+        /* Loader */
+        #loader { display: none; text-align: center; margin-top: 50px; font-size: 20px; color: var(--text-sub); }
     </style>
 </head>
 <body>
 
 <header>
-    <div><span class="status-dot"></span> <b>In Submit Tracker (Live)</b></div>
+    <div class="live-indicator">
+        <span class="status-dot"></span> 
+        <span>IN SUBMIT TRACKER (LIVE)</span>
+    </div>
     <div class="controls">
         <select id="shiftFilter" onchange="renderCurrentData()">
-            <option value="all">كل الشيفتات</option>
+            <option value="all">All Shifts</option>
+        </select>
+        <select id="locationFilter" onchange="renderCurrentData()">
+            <option value="all">All Locations</option>
         </select>
         <input type="date" id="datePicker" onchange="fetchData()">
-        <button onclick="fetchData()" style="cursor:pointer; background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:5px;">تحديث يدوي</button>
+        <button class="btn-refresh" onclick="fetchData()"><i class="fas fa-sync-alt"></i> Update</button>
     </div>
 </header>
 
+<div id="loader"><i class="fas fa-circle-notch fa-spin"></i> Synchronizing Data...</div>
 <div id="content"></div>
 
 <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec'; 
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec'; // Replace with your Web App URL
     let globalData = {};
 
     window.onload = () => {
+        // Set Today's Date
         document.getElementById('datePicker').value = new Date().toISOString().split('T')[0];
         fetchData();
-        // تحديث تلقائي كل 5 ثواني
+        // Auto Update every 5 seconds
         setInterval(fetchData, 5000);
     };
 
     async function fetchData() {
-        const date = document.getElementById('datePicker').value.split('-').reverse().join('-');
+        const dateInput = document.getElementById('datePicker').value;
+        const formattedDate = dateInput.split('-').reverse().join('-');
+        
         try {
-            const res = await fetch(`${API_URL}?date=${date}`);
+            const res = await fetch(`${API_URL}?date=${formattedDate}`);
             const json = await res.json();
             globalData = json.data;
-            updateShiftFilter();
+            
+            updateFilters();
             renderCurrentData();
-        } catch (e) { console.error("Update failed"); }
+        } catch (e) {
+            console.error("Fetch Error:", e);
+        }
     }
 
-    function updateShiftFilter() {
-        const filter = document.getElementById('shiftFilter');
-        const currentVal = filter.value;
-        filter.innerHTML = '<option value="all">كل الشيفتات</option>';
+    function updateFilters() {
+        const shiftSelect = document.getElementById('shiftFilter');
+        const locSelect = document.getElementById('locationFilter');
+        
+        const currentShift = shiftSelect.value;
+        const currentLoc = locSelect.value;
+
+        // Collect unique Shifts and Locations
+        let shifts = new Set();
+        let locations = new Set();
+
         Object.keys(globalData).forEach(s => {
-            filter.innerHTML += `<option value="${s}" ${s === currentVal ? 'selected' : ''}>شيفت: ${s}</option>`;
+            shifts.add(s);
+            Object.keys(globalData[s]).forEach(l => locations.add(l));
+        });
+
+        // Update Shift UI
+        shiftSelect.innerHTML = '<option value="all">All Shifts</option>';
+        shifts.forEach(s => {
+            shiftSelect.innerHTML += `<option value="${s}" ${s === currentShift ? 'selected' : ''}>Shift: ${s}</option>`;
+        });
+
+        // Update Location UI
+        locSelect.innerHTML = '<option value="all">All Locations</option>';
+        locations.forEach(l => {
+            locSelect.innerHTML += `<option value="${l}" ${l === currentLoc ? 'selected' : ''}>${l}</option>`;
         });
     }
 
     function renderCurrentData() {
-        const filter = document.getElementById('shiftFilter').value;
+        const shiftFilter = document.getElementById('shiftFilter').value;
+        const locFilter = document.getElementById('locationFilter').value;
         const content = document.getElementById('content');
+        
         content.innerHTML = '';
 
         for (const [shift, locations] of Object.entries(globalData)) {
-            if (filter !== 'all' && shift !== filter) continue;
+            if (shiftFilter !== 'all' && shift !== shiftFilter) continue;
+
+            // Check if this shift has any location matching the filter
+            const filteredLocs = Object.entries(locations).filter(([locName]) => {
+                return locFilter === 'all' || locName === locFilter;
+            });
+
+            if (filteredLocs.length === 0) continue;
 
             const section = document.createElement('div');
             section.className = 'shift-block';
-            section.innerHTML = `<div class="shift-header">شيفت: ${shift}</div>`;
+            section.innerHTML = `<div class="shift-header">Shift: ${shift}</div>`;
             
             const grid = document.createElement('div');
             grid.className = 'grid';
 
-            for (const [loc, type] of Object.entries(locations)) {
+            filteredLocs.forEach(([loc, type]) => {
                 const card = document.createElement('div');
                 card.className = 'room-card';
                 card.innerHTML = `
                     <div class="room-name">${loc}</div>
                     <div class="split-view">
                         <div class="column">
-                            <div class="col-title" style="color:var(--danger)">Not Submit (${type.notSubmitted.length})</div>
+                            <div class="col-title" style="color:var(--danger)">Not Submitted (${type.notSubmitted.length})</div>
                             ${type.notSubmitted.map(u => createUserBox(u, 'not-sub')).join('')}
                         </div>
                         <div class="column">
@@ -118,7 +257,8 @@
                     </div>
                 `;
                 grid.appendChild(card);
-            }
+            });
+
             section.appendChild(grid);
             content.appendChild(section);
         }
