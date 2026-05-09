@@ -4,237 +4,1693 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>In Submit Tracker | Teams Live Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
+        /* ============================================
+           CSS VARIABLES & DESIGN TOKENS
+           ============================================ */
         :root {
-            --bg-body: #0f0f0f; 
-            --bg-card: #1a1a1a; 
-            --text-main: #e0e0e0;
-            --text-sub: #b0b0b0; 
-            --primary: #6200ee; 
-            --danger: #ff5252; 
-            --success: #00e676; 
-            --border: #2d2d2d;
-            --header-bg: #1e1e1e;
+            /* Background Palette - Deep Slate/Obsidian */
+            --bg-primary: #0a0e17;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-glass: rgba(255, 255, 255, 0.03);
+            --bg-glass-hover: rgba(255, 255, 255, 0.06);
+            
+            /* Neon Accent Colors */
+            --accent-indigo: #818cf8;
+            --accent-indigo-glow: rgba(129, 140, 248, 0.4);
+            --accent-emerald: #34d399;
+            --accent-emerald-glow: rgba(52, 211, 153, 0.4);
+            --accent-crimson: #f43f5e;
+            --accent-crimson-glow: rgba(244, 63, 94, 0.4);
+            
+            /* Text Colors */
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            
+            /* Border & Effects */
+            --border-subtle: rgba(148, 163, 184, 0.1);
+            --border-glass: rgba(255, 255, 255, 0.08);
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --blur-glass: blur(20px);
+            
+            /* Spacing Scale */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            
+            /* Transitions */
+            --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* ============================================
+           BASE STYLES & RESET
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body { 
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; 
-            background: var(--bg-body); color: var(--text-main); margin: 0; padding: 20px; 
+            font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; 
+            background: var(--bg-primary); 
+            color: var(--text-primary); 
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        header { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: var(--header-bg); padding: 15px 25px; border-radius: 12px; 
-            margin-bottom: 30px; border: 1px solid var(--border); position: sticky; 
-            top: 10px; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        /* Animated Background Grid */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(129, 140, 248, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(129, 140, 248, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 0;
         }
 
-        .live-indicator { display: flex; align-items: center; gap: 10px; font-weight: bold; }
-        .status-dot { height: 10px; width: 10px; background: var(--success); border-radius: 50%; box-shadow: 0 0 10px var(--success); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        .controls { display: flex; gap: 10px; }
-        select, input { background: #2c2c2c; color: white; border: 1px solid var(--border); padding: 8px 12px; border-radius: 6px; outline: none; font-size: 14px; }
-
-        .location-title { color: var(--success); font-size: 26px; margin: 40px 0 15px 0; display: flex; align-items: center; gap: 10px; }
+        /* Ambient Glow Orbs */
+        .ambient-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
         
-        .location-summary { display: flex; gap: 20px; margin-bottom: 25px; padding: 15px; background: rgba(255, 255, 255, 0.03); border-radius: 10px; border: 1px solid var(--border); }
-        .summary-item { display: flex; flex-direction: column; gap: 5px; }
-        .summary-label { font-size: 11px; color: var(--text-sub); text-transform: uppercase; }
-        .summary-value { font-size: 18px; font-weight: bold; }
-        .value-sub { color: var(--success); }
-        .value-not { color: var(--danger); }
-        .progress-container { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-        .progress-bar-bg { height: 8px; background: #333; border-radius: 4px; overflow: hidden; margin-top: 5px; }
-        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--success)); transition: width 0.5s ease; }
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: var(--accent-indigo);
+            top: -200px;
+            right: -200px;
+            animation-delay: 0s;
+        }
+        
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: var(--accent-emerald);
+            bottom: -150px;
+            left: -150px;
+            animation-delay: -7s;
+        }
+        
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: var(--accent-crimson);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-delay: -14s;
+        }
 
-        .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 20px; }
-        .team-card { background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border); overflow: hidden; }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.05); }
+            66% { transform: translate(-20px, 20px) scale(0.95); }
+        }
+
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: var(--space-lg);
+        }
+
+        /* ============================================
+           HEADER - GLASSMORPHISM STYLE
+           ============================================ */
+        header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            flex-wrap: wrap;
+            gap: var(--space-md);
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            -webkit-backdrop-filter: var(--blur-glass);
+            padding: var(--space-lg) var(--space-xl); 
+            border-radius: var(--radius-xl); 
+            margin-bottom: var(--space-2xl); 
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-glass);
+            position: sticky; 
+            top: var(--space-md); 
+            z-index: 1000;
+            animation: slideDown 0.6s var(--transition-spring);
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: var(--space-lg);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 4px 20px var(--accent-indigo-glow);
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 20px var(--accent-indigo-glow); }
+            50% { box-shadow: 0 4px 40px var(--accent-indigo-glow), 0 0 60px var(--accent-indigo-glow); }
+        }
+
+        .brand-text h1 {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-text p {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        /* Live Indicator */
+        .live-indicator { 
+            display: flex; 
+            align-items: center; 
+            gap: var(--space-sm); 
+            font-weight: 600;
+            font-size: 13px;
+            padding: var(--space-sm) var(--space-md);
+            background: rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(52, 211, 153, 0.2);
+            border-radius: 9999px;
+            color: var(--accent-emerald);
+        }
+        
+        .status-dot { 
+            height: 10px; 
+            width: 10px; 
+            background: var(--accent-emerald); 
+            border-radius: 50%; 
+            box-shadow: 0 0 12px var(--accent-emerald), 0 0 24px var(--accent-emerald-glow);
+            animation: pulse-dot 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .status-dot::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            opacity: 0.3;
+            animation: ripple 2s ease-out infinite;
+        }
+
+        @keyframes pulse-dot { 
+            0%, 100% { opacity: 1; transform: scale(1); } 
+            50% { opacity: 0.6; transform: scale(0.9); } 
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 0.3; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* Controls Section */
+        .controls { 
+            display: flex; 
+            gap: var(--space-sm); 
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+            transition: color var(--transition-fast);
+        }
+
+        .search-input:focus + .search-icon,
+        .search-wrapper:hover .search-icon {
+            color: var(--accent-indigo);
+        }
+
+        select, input { 
+            background: var(--bg-glass-hover); 
+            color: var(--text-primary); 
+            border: 1px solid var(--border-subtle); 
+            padding: 10px 16px; 
+            border-radius: var(--radius-sm); 
+            outline: none; 
+            font-size: 13px;
+            font-family: inherit;
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            backdrop-filter: blur(10px);
+        }
+
+        select:hover, input:hover {
+            border-color: var(--border-glass);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        select:focus, input:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 3px var(--accent-indigo-glow);
+        }
+
+        .search-input {
+            padding-left: 42px;
+            min-width: 220px;
+        }
+
+        select {
+            cursor: pointer;
+            min-width: 140px;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        /* ============================================
+           LOADER STATE
+           ============================================ */
+        #loader { 
+            text-align: center; 
+            padding: 80px 20px; 
+            font-size: 16px; 
+            color: var(--text-secondary);
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .loader-spinner {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .spinner-ring {
+            width: 56px;
+            height: 56px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--accent-indigo);
+            border-right-color: var(--accent-emerald);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .loader-dots span {
+            animation: dotPulse 1.4s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        .loader-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .loader-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes dotPulse {
+            0%, 80%, 100% { opacity: 0.3; }
+            40% { opacity: 1; }
+        }
+
+        /* ============================================
+           SHIFT TAG
+           ============================================ */
+        .shift-tag { 
+            background: linear-gradient(135deg, rgba(129, 140, 248, 0.15), rgba(129, 140, 248, 0.05));
+            border: 1px solid rgba(129, 140, 248, 0.25);
+            padding: 10px 24px; 
+            border-radius: 9999px; 
+            font-size: 13px; 
+            font-weight: 700; 
+            margin-bottom: var(--space-xl); 
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            color: var(--accent-indigo);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+            animation: shiftTagAppear 0.5s var(--transition-spring);
+        }
+
+        @keyframes shiftTagAppear {
+            from {
+                opacity: 0;
+                transform: scaleX(0.8) translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: scaleX(1) translateY(0);
+            }
+        }
+
+        /* ============================================
+           LOCATION SECTION - HERO STATS
+           ============================================ */
+        .location-section {
+            margin-bottom: var(--space-2xl);
+            animation: sectionAppear 0.6s var(--transition-spring) backwards;
+        }
+
+        @keyframes sectionAppear {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .location-title { 
+            color: var(--text-primary); 
+            font-size: 26px; 
+            font-weight: 800;
+            margin-bottom: var(--space-lg); 
+            display: flex; 
+            align-items: center; 
+            gap: var(--space-md);
+            letter-spacing: -0.02em;
+        }
+
+        .location-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--accent-emerald), rgba(52, 211, 153, 0.5));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+            box-shadow: 0 4px 20px var(--accent-emerald-glow);
+        }
+
+        /* Hero Stats Card */
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-md);
+            margin-bottom: var(--space-xl);
+        }
+
+        .stat-card {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            -webkit-backdrop-filter: var(--blur-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            transition: all var(--transition-smooth);
+            position: relative;
+            overflow: hidden;
+            animation: statCardPop 0.4s var(--transition-spring) backwards;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-subtle);
+            box-shadow: var(--shadow-glass);
+            background: var(--bg-glass-hover);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--card-accent, var(--accent-indigo)), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-card.submitted { --card-accent: var(--accent-emerald); }
+        .stat-card.not-submitted { --card-accent: var(--accent-crimson); }
+        .stat-card.total { --card-accent: var(--accent-indigo); }
+
+        @keyframes statCardPop {
+            from {
+                opacity: 0;
+                transform: scale(0.9) translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+        }
+
+        .stat-card.submitted .stat-icon {
+            background: rgba(52, 211, 153, 0.15);
+            color: var(--accent-emerald);
+        }
+
+        .stat-card.not-submitted .stat-icon {
+            background: rgba(244, 63, 94, 0.15);
+            color: var(--accent-crimson);
+        }
+
+        .stat-card.total .stat-icon {
+            background: rgba(129, 140, 248, 0.15);
+            color: var(--accent-indigo);
+        }
+
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label { 
+            font-size: 11px; 
+            color: var(--text-muted); 
+            text-transform: uppercase; 
+            letter-spacing: 0.08em;
+            font-weight: 600;
+        }
+
+        .stat-value { 
+            font-size: 28px; 
+            font-weight: 800;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-card.submitted .stat-value { color: var(--accent-emerald); }
+        .stat-card.not-submitted .stat-value { color: var(--accent-crimson); }
+        .stat-card.total .stat-value { color: var(--accent-indigo); }
+
+        /* Progress Ring Container */
+        .progress-ring-container {
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            -webkit-backdrop-filter: var(--blur-glass);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: var(--space-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xl);
+            animation: statCardPop 0.4s var(--transition-spring) 0.2s backwards;
+        }
+
+        .ring-wrapper {
+            position: relative;
+            width: 120px;
+            height: 120px;
+        }
+
+        .progress-ring-svg {
+            transform: rotate(-90deg);
+            width: 120px;
+            height: 120px;
+        }
+
+        .ring-bg {
+            fill: none;
+            stroke: var(--border-subtle);
+            stroke-width: 8;
+        }
+
+        .ring-progress {
+            fill: none;
+            stroke: url(#gradient-progress);
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 339.292;
+            stroke-dashoffset: 339.292;
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 0 8px var(--accent-emerald-glow));
+        }
+
+        .ring-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .ring-percentage {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+
+        .ring-label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .ring-details {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-size: 13px;
+        }
+
+        .detail-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .detail-dot.done { background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald-glow); }
+        .detail-dot.pending { background: var(--accent-crimson); box-shadow: 0 0 8px var(--accent-crimson-glow); }
+
+        /* ============================================
+           TEAMS GRID
+           ============================================ */
+        .teams-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(480px, 1fr)); 
+            gap: var(--space-lg); 
+        }
+
+        .team-card { 
+            background: var(--bg-glass);
+            backdrop-filter: var(--blur-glass);
+            -webkit-backdrop-filter: var(--blur-glass);
+            border-radius: var(--radius-lg); 
+            border: 1px solid var(--border-glass);
+            overflow: hidden;
+            transition: all var(--transition-smooth);
+            animation: cardSlideUp 0.5s var(--transition-spring) backwards;
+            box-shadow: var(--shadow-glass);
+        }
+
+        .team-card:hover {
+            border-color: var(--border-subtle);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        @keyframes cardSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
         
         .team-header { 
-            background: #252525; padding: 12px 15px; cursor: pointer;
-            display: flex; justify-content: space-between; align-items: center; transition: 0.3s;
+            background: transparent;
+            padding: var(--space-lg); 
+            cursor: pointer;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            transition: all var(--transition-fast);
+            position: relative;
         }
-        .team-header:hover { background: #2d2d2d; }
-        .tl-info { display: flex; flex-direction: column; gap: 2px; }
-        .team-name { color: #fff; font-size: 15px; font-weight: bold; }
+
+        .team-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: var(--space-lg);
+            right: var(--space-lg);
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border-subtle), transparent);
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
+
+        .team-card.active .team-header::after {
+            opacity: 1;
+        }
+
+        .team-header:hover { 
+            background: var(--bg-glass-hover);
+        }
+
+        .tl-info { 
+            display: flex; 
+            flex-direction: column; 
+            gap: var(--space-xs);
+            flex: 1;
+        }
+
+        .team-name { 
+            color: var(--text-primary); 
+            font-size: 16px; 
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .team-name i {
+            color: var(--accent-indigo);
+            font-size: 14px;
+        }
         
-        /* عداد خارجي للـ TL */
-        .tl-badge-container { display: flex; gap: 8px; font-size: 11px; font-weight: bold; }
-        .badge { padding: 2px 8px; border-radius: 4px; }
-        .badge-done { background: rgba(0, 230, 118, 0.15); color: var(--success); border: 1px solid rgba(0, 230, 118, 0.3); }
-        .badge-not { background: rgba(255, 82, 82, 0.15); color: var(--danger); border: 1px solid rgba(255, 82, 82, 0.3); }
+        /* Status Badges - High End Design */
+        .tl-badge-container { 
+            display: flex; 
+            gap: var(--space-sm); 
+            font-size: 11px; 
+            font-weight: 700;
+            margin-top: var(--space-xs);
+        }
 
-        .fa-chevron-down { transition: transform 0.3s; color: var(--text-sub); }
-        .team-card.active .fa-chevron-down { transform: rotate(180deg); }
+        .badge { 
+            padding: 5px 12px; 
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.02em;
+            transition: all var(--transition-fast);
+            position: relative;
+            overflow: hidden;
+        }
 
-        .team-content { display: none; padding: 15px; border-top: 1px solid var(--border); }
-        .team-card.active .team-content { display: flex; }
+        .badge::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: currentColor;
+            opacity: 0;
+            transition: opacity var(--transition-fast);
+        }
 
-        .split-view { display: flex; width: 100%; gap: 10px; }
-        .column { flex: 1; }
-        .col-title { font-size: 11px; font-weight: bold; text-align: center; margin-bottom: 12px; text-transform: uppercase; border-bottom: 1px solid var(--border); padding-bottom: 5px;}
+        .badge:hover::before {
+            opacity: 0.1;
+        }
 
-        .user-box { padding: 8px; border-radius: 6px; margin-bottom: 6px; font-size: 12px; background: rgba(255,255,255,0.02); }
-        .not-sub-box { border-left: 3px solid var(--danger); }
-        .sub-box { border-left: 3px solid var(--success); }
-        .u-email { display: block; font-weight: bold; overflow: hidden; text-overflow: ellipsis; }
-        .not-sub-box .u-email { color: var(--danger); }
-        .sub-box .u-email { color: var(--success); }
-        .u-meta { font-size: 10px; color: var(--text-sub); }
+        .badge-done { 
+            background: rgba(52, 211, 153, 0.12); 
+            color: var(--accent-emerald); 
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.1);
+        }
 
-        #loader { text-align: center; padding: 50px; font-size: 18px; color: var(--text-sub); }
-        .shift-tag { background: var(--primary); padding: 4px 15px; border-radius: 20px; font-size: 16px; font-weight: bold; margin-top: 20px; display: inline-block; }
+        .badge-not { 
+            background: rgba(244, 63, 94, 0.12); 
+            color: var(--accent-crimson); 
+            border: 1px solid rgba(244, 63, 94, 0.25);
+            box-shadow: 0 0 12px rgba(244, 63, 94, 0.1);
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        .chevron-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-glass);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            transition: all var(--transition-smooth);
+            flex-shrink: 0;
+        }
+
+        .team-header:hover .chevron-icon {
+            border-color: var(--accent-indigo);
+            color: var(--accent-indigo);
+        }
+
+        .fa-chevron-down { 
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            font-size: 12px;
+        }
+
+        .team-card.active .fa-chevron-down { 
+            transform: rotate(180deg); 
+        }
+
+        .team-card.active .chevron-icon {
+            background: rgba(129, 140, 248, 0.15);
+            border-color: var(--accent-indigo);
+            color: var(--accent-indigo);
+        }
+
+        /* Team Content - Accordion */
+        .team-content { 
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-top: 1px solid transparent;
+        }
+
+        .team-card.active .team-content { 
+            max-height: 600px;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .content-inner {
+            padding: var(--space-lg);
+            animation: contentFadeIn 0.3s ease;
+        }
+
+        @keyframes contentFadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .split-view { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: var(--space-lg); 
+        }
+
+        .column { 
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-sm);
+        }
+
+        .col-title { 
+            font-size: 11px; 
+            font-weight: 700; 
+            text-align: center; 
+            margin-bottom: var(--space-sm); 
+            text-transform: uppercase; 
+            letter-spacing: 0.1em;
+            padding-bottom: var(--space-sm);
+            border-bottom: 2px solid;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-xs);
+        }
+
+        .col-title.not-submit {
+            color: var(--accent-crimson);
+            border-color: rgba(244, 63, 94, 0.3);
+        }
+
+        .col-title.submit {
+            color: var(--accent-emerald);
+            border-color: rgba(52, 211, 153, 0.3);
+        }
+
+        .col-count {
+            background: currentColor;
+            padding: 2px 8px;
+            border-radius: 9999px;
+            font-size: 10px;
+            opacity: 0.2;
+        }
+
+        /* User Box Cards */
+        .user-box { 
+            padding: 12px 14px; 
+            border-radius: var(--radius-sm); 
+            font-size: 13px; 
+            background: var(--bg-glass);
+            border: 1px solid transparent;
+            transition: all var(--transition-fast);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-sm);
+            animation: userBoxSlide 0.3s ease backwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .user-box::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            transition: width var(--transition-fast);
+        }
+
+        .user-box:hover {
+            background: var(--bg-glass-hover);
+            border-color: var(--border-subtle);
+            transform: translateX(4px);
+        }
+
+        .user-box:hover::before {
+            width: 4px;
+        }
+
+        @keyframes userBoxSlide {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .not-sub-box { 
+            border-left: 3px solid var(--accent-crimson);
+        }
+
+        .not-sub-box::before {
+            background: var(--accent-crimson);
+        }
+
+        .sub-box { 
+            border-left: 3px solid var(--accent-emerald);
+        }
+
+        .sub-box::before {
+            background: var(--accent-emerald);
+        }
+
+        .u-email { 
+            display: block; 
+            font-weight: 600; 
+            overflow: hidden; 
+            text-overflow: ellipsis; 
+            white-space: nowrap;
+            font-size: 13px;
+        }
+
+        .not-sub-box .u-email { color: var(--accent-crimson); }
+        .sub-box .u-email { color: var(--accent-emerald); }
+
+        .u-meta { 
+            font-size: 11px; 
+            color: var(--text-muted); 
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--space-xl);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        /* ============================================
+           PULSE EFFECT FOR DATA UPDATES
+           ============================================ */
+        .pulse-update {
+            animation: dataPulse 0.6s ease;
+        }
+
+        @keyframes dataPulse {
+            0% { box-shadow: 0 0 0 0 var(--accent-indigo-glow); }
+            50% { box-shadow: 0 0 0 15px transparent; }
+            100% { box-shadow: 0 0 0 0 transparent; }
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 1024px) {
+            .teams-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                padding: var(--space-md);
+            }
+
+            header {
+                flex-direction: column;
+                align-items: stretch;
+                padding: var(--space-md);
+            }
+
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: var(--space-md);
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            select, input {
+                width: 100%;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .progress-ring-container {
+                flex-direction: column;
+            }
+
+            .split-view {
+                grid-template-columns: 1fr;
+            }
+
+            .location-title {
+                font-size: 20px;
+            }
+        }
+
+        /* ============================================
+           SCROLLBAR STYLING
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-subtle);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* ============================================
+           SELECTION STYLING
+           ============================================ */
+        ::selection {
+            background: var(--accent-indigo);
+            color: white;
+        }
     </style>
 </head>
 <body>
 
-<header>
-    <div class="live-indicator">
-        <div class="status-dot"></div>
-        <span>IN SUBMIT TRACKER (LIVE)</span>
-    </div>
-    <div class="controls">
-        <select id="shiftFilter" onchange="renderData()"><option value="all">All Shifts</option></select>
-        <select id="locFilter" onchange="renderData()"><option value="all">All Locations</option></select>
-        <input type="date" id="datePicker" onchange="fetchData()">
-    </div>
-</header>
+<!-- Ambient Background Orbs -->
+<div class="ambient-orb orb-1"></div>
+<div class="ambient-orb orb-2"></div>
+<div class="ambient-orb orb-3"></div>
 
-<div id="loader"><i class="fas fa-spinner fa-spin"></i> Syncing with Google Sheets...</div>
-<div id="dashboard"></div>
+<!-- SVG Definitions for Gradients -->
+<svg style="position: absolute; width: 0; height: 0;">
+    <defs>
+        <linearGradient id="gradient-progress" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#818cf8"/>
+            <stop offset="50%" stop-color="#34d399"/>
+            <stop offset="100%" stop-color="#34d399"/>
+        </linearGradient>
+    </defs>
+</svg>
+
+<div class="app-container">
+    <!-- Header -->
+    <header id="mainHeader">
+        <div class="header-left">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Submit Tracker</h1>
+                    <p>Live Operations Dashboard</p>
+                </div>
+            </div>
+            <div class="live-indicator">
+                <div class="status-dot"></div>
+                <span>LIVE</span>
+            </div>
+        </div>
+
+        <div class="controls">
+            <div class="search-wrapper">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search emails..." oninput="handleSearch()">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <select id="shiftFilter" onchange="renderData()">
+                <option value="all">All Shifts</option>
+            </select>
+            <select id="locFilter" onchange="renderData()">
+                <option value="all">All Locations</option>
+            </select>
+            <input type="date" id="datePicker" onchange="fetchData()">
+        </div>
+    </header>
+
+    <!-- Loader State -->
+    <div id="loader">
+        <div class="loader-spinner">
+            <div class="spinner-ring"></div>
+            <div class="loader-text">
+                Syncing with Google Sheets<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Container -->
+    <div id="dashboard"></div>
+</div>
 
 <script>
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec';
-    let rawData = {};
-    let openTeams = new Set(); 
-
-    window.onload = () => {
-        document.getElementById('datePicker').value = new Date().toISOString().split('T')[0];
-        fetchData();
-        setInterval(fetchData, 5000);
+    /**
+     * ============================================
+     * CONFIGURATION & STATE MANAGEMENT
+     * ============================================
+     */
+    const CONFIG = {
+        API_URL: 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec',
+        REFRESH_INTERVAL: 5000,
+        ANIMATION_STAGGER_DELAY: 80
     };
 
+    // Application State
+    const state = {
+        rawData: {},
+        openTeams: new Set(),
+        searchTerm: '',
+        lastUpdateCount: 0
+    };
+
+    // DOM Element References
+    const elements = {
+        loader: null,
+        dashboard: null,
+        shiftFilter: null,
+        locFilter: null,
+        datePicker: null,
+        searchInput: null,
+        mainHeader: null
+    };
+
+    /**
+     * ============================================
+     * INITIALIZATION
+     * ============================================
+     */
+    function initializeApp() {
+        // Cache DOM elements
+        elements.loader = document.getElementById('loader');
+        elements.dashboard = document.getElementById('dashboard');
+        elements.shiftFilter = document.getElementById('shiftFilter');
+        elements.locFilter = document.getElementById('locFilter');
+        elements.datePicker = document.getElementById('datePicker');
+        elements.searchInput = document.getElementById('searchInput');
+        elements.mainHeader = document.getElementById('mainHeader');
+
+        // Set default date to today
+        elements.datePicker.value = new Date().toISOString().split('T')[0];
+
+        // Initial data fetch
+        fetchData();
+
+        // Set up auto-refresh interval
+        setInterval(fetchData, CONFIG.REFRESH_INTERVAL);
+
+        // Keyboard shortcut for search (Ctrl/Cmd + K)
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                elements.searchInput.focus();
+            }
+        });
+    }
+
+    /**
+     * ============================================
+     * API & DATA FETCHING
+     * ============================================
+     */
     async function fetchData() {
-        const date = document.getElementById('datePicker').value.split('-').reverse().join('-');
+        const date = formatDateForAPI(elements.datePicker.value);
+        
         try {
-            const res = await fetch(`${API_URL}?date=${date}`);
-            const json = await res.json();
-            rawData = json.data;
+            showLoader(true);
+            
+            const response = await fetch(`${CONFIG.API_URL}?date=${date}`);
+            const json = await response.json();
+            
+            // Check for data changes and trigger pulse if needed
+            const newDataCount = countTotalEntries(json.data);
+            if (state.lastUpdateCount > 0 && newDataCount !== state.lastUpdateCount) {
+                triggerUpdatePulse();
+            }
+            state.lastUpdateCount = newDataCount;
+
+            state.rawData = json.data || {};
+            
             updateFilters();
             renderData();
-            document.getElementById('loader').style.display = 'none';
-        } catch (e) { console.error("Update failed"); }
+            
+            showLoader(false);
+        } catch (error) {
+            console.error("Data fetch failed:", error);
+            showLoader(false);
+        }
     }
 
-    function updateFilters() {
-        const sFilter = document.getElementById('shiftFilter');
-        const lFilter = document.getElementById('locFilter');
-        const sVal = sFilter.value, lVal = lFilter.value;
-        let shifts = new Set(), locs = new Set();
-        Object.keys(rawData).forEach(s => {
-            shifts.add(s);
-            Object.keys(rawData[s]).forEach(l => locs.add(l));
+    function formatDateForAPI(dateString) {
+        return dateString.split('-').reverse().join('-');
+    }
+
+    function countTotalEntries(data) {
+        let count = 0;
+        Object.values(data).forEach(shift => {
+            Object.values(shift).forEach(location => {
+                Object.values(location).forEach(team => {
+                    count += team.submitted.length + team.notSubmitted.length;
+                });
+            });
         });
-        sFilter.innerHTML = '<option value="all">All Shifts</option>';
-        shifts.forEach(s => sFilter.innerHTML += `<option value="${s}" ${s==sVal?'selected':''}>Shift: ${s}</option>`);
-        lFilter.innerHTML = '<option value="all">All Locations</option>';
-        locs.forEach(l => lFilter.innerHTML += `<option value="${l}" ${l==lVal?'selected':''}>${l}</option>`);
+        return count;
     }
 
-    // تعديل: فتح القائمة المنسدلة للـ TL المختار فقط
+    function showLoader(show) {
+        elements.loader.style.display = show ? 'block' : 'none';
+    }
+
+    /**
+     * ============================================
+     * FILTERS MANAGEMENT
+     * ============================================
+     */
+    function updateFilters() {
+        const shifts = new Set();
+        const locations = new Set();
+
+        // Extract unique shifts and locations
+        Object.keys(state.rawData).forEach(shift => {
+            shifts.add(shift);
+            Object.keys(state.rawData[shift]).forEach(loc => locations.add(loc));
+        });
+
+        // Preserve current selections
+        const currentShift = elements.shiftFilter.value;
+        const currentLoc = elements.locFilter.value;
+
+        // Update Shift Filter
+        elements.shiftFilter.innerHTML = '<option value="all">All Shifts</option>';
+        shifts.forEach(shift => {
+            const option = document.createElement('option');
+            option.value = shift;
+            option.textContent = `Shift: ${shift}`;
+            if (shift === currentShift) option.selected = true;
+            elements.shiftFilter.appendChild(option);
+        });
+
+        // Update Location Filter
+        elements.locFilter.innerHTML = '<option value="all">All Locations</option>';
+        locations.forEach(loc => {
+            const option = document.createElement('option');
+            option.value = loc;
+            option.textContent = loc;
+            if (loc === currentLoc) option.selected = true;
+            elements.locFilter.appendChild(option);
+        });
+    }
+
+    /**
+     * ============================================
+     * SEARCH FUNCTIONALITY
+     * ============================================
+     */
+    function handleSearch() {
+        state.searchTerm = elements.searchInput.value.toLowerCase().trim();
+        renderData();
+    }
+
+    function matchesSearch(email, pc) {
+        if (!state.searchTerm) return true;
+        const searchLower = state.searchTerm.toLowerCase();
+        return email.toLowerCase().includes(searchLower) || 
+               String(pc).toLowerCase().includes(searchLower);
+    }
+
+    /**
+     * ============================================
+     * TEAM ACCORDION TOGGLE
+     * ============================================
+     */
     function toggleTeam(tlID) {
         const card = document.getElementById(tlID);
+        if (!card) return;
+
         if (card.classList.contains('active')) {
             card.classList.remove('active');
-            openTeams.delete(tlID);
+            state.openTeams.delete(tlID);
         } else {
             card.classList.add('active');
-            openTeams.add(tlID);
+            state.openTeams.add(tlID);
         }
     }
 
+    /**
+     * ============================================
+     * MAIN RENDER FUNCTION
+     * ============================================
+     */
     function renderData() {
-        const sF = document.getElementById('shiftFilter').value;
-        const lF = document.getElementById('locFilter').value;
-        const container = document.getElementById('dashboard');
-        container.innerHTML = '';
+        const selectedShift = elements.shiftFilter.value;
+        const selectedLocation = elements.locFilter.value;
 
-        for (const [shift, locations] of Object.entries(rawData)) {
-            if (sF !== 'all' && shift !== sF) continue;
+        // Clear existing content
+        elements.dashboard.innerHTML = '';
 
-            const shiftWrap = document.createElement('div');
-            shiftWrap.innerHTML = `<div class="shift-tag">SHIFT: ${shift}</div>`;
+        let globalAnimationIndex = 0;
 
+        // Iterate through shifts
+        for (const [shift, locations] of Object.entries(state.rawData)) {
+            if (selectedShift !== 'all' && shift !== selectedShift) continue;
+
+            // Create shift wrapper
+            const shiftWrapper = document.createElement('div');
+            shiftWrapper.innerHTML = `
+                <div class="shift-tag">
+                    <i class="fas fa-clock"></i>
+                    Shift: ${shift}
+                </div>
+            `;
+
+            // Iterate through locations
             for (const [locName, teams] of Object.entries(locations)) {
-                if (lF !== 'all' && locName !== lF) continue;
+                if (selectedLocation !== 'all' && locName !== selectedLocation) continue;
 
-                let totalSub = 0, totalNotSub = 0;
-                for (const t of Object.values(teams)) {
-                    totalSub += t.submitted.length;
-                    totalNotSub += t.notSubmitted.length;
-                }
-                let total = totalSub + totalNotSub;
-                let percent = total > 0 ? Math.round((totalSub / total) * 100) : 0;
+                // Calculate location statistics
+                const stats = calculateLocationStats(teams);
+                
+                // Apply staggered animation delay
+                globalAnimationIndex++;
+                const animDelay = globalAnimationIndex * CONFIG.ANIMATION_STAGGER_DELAY;
 
-                const locDiv = document.createElement('div');
-                locDiv.innerHTML = `
-                    <div class="location-title"><i class="fas fa-map-marker-alt"></i> ${locName}</div>
-                    <div class="location-summary">
-                        <div class="summary-item"><span class="summary-label">Submitted</span><span class="summary-value value-sub">${totalSub}</span></div>
-                        <div class="summary-item"><span class="summary-label">Not Submit</span><span class="summary-value value-not">${totalNotSub}</span></div>
-                        <div class="progress-container">
-                            <div style="display:flex; justify-content:space-between; font-size:11px; margin-bottom:3px">
-                                <span>COMPLETION RATE</span><span>${percent}%</span>
-                            </div>
-                            <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${percent}%"></div></div>
+                // Create location section
+                const locationSection = createLocationSection(
+                    locName, 
+                    teams, 
+                    stats, 
+                    shift, 
+                    animDelay
+                );
+
+                shiftWrapper.appendChild(locationSection);
+            }
+
+            elements.dashboard.appendChild(shiftWrapper);
+        }
+
+        // Handle empty state
+        if (Object.keys(state.rawData).length === 0) {
+            elements.dashboard.innerHTML = `
+                <div class="empty-state" style="padding: 60px;">
+                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                    <p>No data available for the selected filters.</p>
+                </div>
+            `;
+        }
+    }
+
+    /**
+     * ============================================
+     * CALCULATION HELPERS
+     * ============================================
+     */
+    function calculateLocationStats(teams) {
+        let totalSubmitted = 0;
+        let totalNotSubmitted = 0;
+
+        Object.values(teams).forEach(team => {
+            totalSubmitted += team.submitted.length;
+            totalNotSubmitted += team.notSubmitted.length;
+        });
+
+        const total = totalSubmitted + totalNotSubmitted;
+        const percentage = total > 0 ? Math.round((totalSubmitted / total) * 100) : 0;
+
+        return {
+            submitted: totalSubmitted,
+            notSubmitted: totalNotSubmitted,
+            total,
+            percentage
+        };
+    }
+
+    /**
+     * ============================================
+     * UI COMPONENT BUILDERS
+     * ============================================
+     */
+    function createLocationSection(locName, teams, stats, shift, delay) {
+        const section = document.createElement('div');
+        section.className = 'location-section';
+        section.style.animationDelay = `${delay}ms`;
+
+        // Location Title
+        const titleHTML = `
+            <div class="location-title">
+                <div class="location-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                ${locName}
+            </div>
+        `;
+
+        // Hero Stats Grid
+        const heroStatsHTML = createHeroStatsHTML(stats);
+
+        // Teams Grid
+        const teamsGridHTML = createTeamsGridHTML(teams, shift, locName);
+
+        section.innerHTML = titleHTML + heroStatsHTML + teamsGridHTML;
+
+        return section;
+    }
+
+    function createHeroStatsHTML(stats) {
+        // Calculate SVG circle parameters
+        const radius = 54;
+        const circumference = 2 * Math.PI * radius;
+        const dashOffset = circumference - (stats.percentage / 100) * circumference;
+
+        return `
+            <div class="hero-stats">
+                <div class="stat-card submitted" style="animation-delay: 0.1s;">
+                    <div class="stat-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Submitted</span>
+                        <span class="stat-value">${stats.submitted}</span>
+                    </div>
+                </div>
+
+                <div class="stat-card not-submitted" style="animation-delay: 0.2s;">
+                    <div class="stat-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Pending</span>
+                        <span class="stat-value">${stats.notSubmitted}</span>
+                    </div>
+                </div>
+
+                <div class="stat-card total" style="animation-delay: 0.3s;">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <span class="stat-label">Total Users</span>
+                        <span class="stat-value">${stats.total}</span>
+                    </div>
+                </div>
+
+                <div class="progress-ring-container" style="animation-delay: 0.4s;">
+                    <div class="ring-wrapper">
+                        <svg class="progress-ring-svg" viewBox="0 0 120 120">
+                            <circle class="ring-bg" cx="60" cy="60" r="${radius}"/>
+                            <circle class="ring-progress" cx="60" cy="60" r="${radius}" 
+                                    style="stroke-dashoffset: ${dashOffset};"/>
+                        </svg>
+                        <div class="ring-center">
+                            <div class="ring-percentage">${stats.percentage}%</div>
+                            <div class="ring-label">Complete</div>
                         </div>
                     </div>
-                `;
+                    <div class="ring-details">
+                        <div class="detail-row">
+                            <span class="detail-dot done"></span>
+                            <span>${stats.submitted} Completed</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-dot pending"></span>
+                            <span>${stats.notSubmitted} Remaining</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
-                const teamGrid = document.createElement('div');
-                teamGrid.className = 'teams-grid';
+    function createTeamsGridHTML(teams, shift, locName) {
+        let teamsHTML = '<div class="teams-grid">';
+        let cardIndex = 0;
 
-                for (const [tlName, stats] of Object.entries(teams)) {
-                    const tlID = `card-${shift}-${locName}-${tlName}`.replace(/\s+/g, '-');
-                    const isActive = openTeams.has(tlID) ? 'active' : '';
+        for (const [tlName, teamData] of Object.entries(teams)) {
+            const tlID = generateCardID(shift, locName, tlName);
+            const isActive = state.openTeams.has(tlID) ? 'active' : '';
 
-                    const card = document.createElement('div');
-                    card.className = `team-card ${isActive}`;
-                    card.id = tlID;
-                    card.innerHTML = `
-                        <div class="team-header" onclick="toggleTeam('${tlID}')">
-                            <div class="tl-info">
-                                <span class="team-name"><i class="fas fa-user-tie"></i> ${tlName}</span>
-                                <div class="tl-badge-container">
-                                    <span class="badge badge-done">Done: ${stats.submitted.length}</span>
-                                    <span class="badge badge-not">Not: ${stats.notSubmitted.length}</span>
-                                </div>
+            // Filter users based on search term
+            const filteredNotSubmitted = teamData.notSubmitted.filter(u => 
+                matchesSearch(u.email, u.pc)
+            );
+            const filteredSubmitted = teamData.submitted.filter(u => 
+                matchesSearch(u.email, u.pc)
+            );
+
+            // Skip card if no results match search (unless no search term)
+            if (state.searchTerm && filteredNotSubmitted.length === 0 && filteredSubmitted.length === 0) {
+                continue;
+            }
+
+            cardIndex++;
+            const cardDelay = cardIndex * 60;
+
+            teamsHTML += `
+                <div class="team-card ${isActive}" id="${tlID}" style="animation-delay: ${cardDelay}ms;">
+                    <div class="team-header" onclick="toggleTeam('${tlID}')">
+                        <div class="tl-info">
+                            <span class="team-name">
+                                <i class="fas fa-user-tie"></i>
+                                ${tlName}
+                            </span>
+                            <div class="tl-badge-container">
+                                <span class="badge badge-done">
+                                    <span class="badge-dot"></span>
+                                    Done: ${filteredSubmitted.length}
+                                </span>
+                                <span class="badge badge-not">
+                                    <span class="badge-dot"></span>
+                                    Pending: ${filteredNotSubmitted.length}
+                                </span>
                             </div>
+                        </div>
+                        <div class="chevron-icon">
                             <i class="fas fa-chevron-down"></i>
                         </div>
-                        <div class="team-content">
+                    </div>
+                    <div class="team-content">
+                        <div class="content-inner">
                             <div class="split-view">
                                 <div class="column">
-                                    <div class="col-title" style="color:var(--danger)">Not Submit (${stats.notSubmitted.length})</div>
-                                    ${stats.notSubmitted.map(u => `<div class="user-box not-sub-box"><span class="u-email">${u.email}</span><span class="u-meta">PC: ${u.pc}</span></div>`).join('')}
+                                    <div class="col-title not-submit">
+                                        <i class="fas fa-clock"></i>
+                                        Pending
+                                        <span class="col-count">${filteredNotSubmitted.length}</span>
+                                    </div>
+                                    ${filteredNotSubmitted.length > 0 ? 
+                                        filteredNotSubmitted.map((u, idx) => createUserBoxHTML(u, 'not-sub', idx)).join('') :
+                                        '<div class="empty-state">No pending users</div>'
+                                    }
                                 </div>
                                 <div class="column">
-                                    <div class="col-title" style="color:var(--success)">Submitted (${stats.submitted.length})</div>
-                                    ${stats.submitted.map(u => `<div class="user-box sub-box"><span class="u-email">${u.email}</span><span class="u-meta">PC: ${u.pc}</span></div>`).join('')}
+                                    <div class="col-title submit">
+                                        <i class="fas fa-check-double"></i>
+                                        Submitted
+                                        <span class="col-count">${filteredSubmitted.length}</span>
+                                    </div>
+                                    ${filteredSubmitted.length > 0 ?
+                                        filteredSubmitted.map((u, idx) => createUserBoxHTML(u, 'sub', idx)).join('') :
+                                        '<div class="empty-state">No submissions yet</div>'
+                                    }
                                 </div>
                             </div>
                         </div>
-                    `;
-                    teamGrid.appendChild(card);
-                }
-                locDiv.appendChild(teamGrid);
-                shiftWrap.appendChild(locDiv);
-            }
-            container.appendChild(shiftWrap);
+                    </div>
+                </div>
+            `;
         }
+
+        teamsHTML += '</div>';
+        return teamsHTML;
     }
+
+    function createUserBoxHTML(user, type, index) {
+        const delay = index * 40;
+        return `
+            <div class="user-box ${type}-box" style="animation-delay: ${delay}ms;">
+                <div>
+                    <span class="u-email">${escapeHTML(user.email)}</span>
+                </div>
+                <span class="u-meta">
+                    <i class="fas fa-desktop"></i>
+                    PC: ${escapeHTML(user.pc)}
+                </span>
+            </div>
+        `;
+    }
+
+    /**
+     * ============================================
+     * UTILITY FUNCTIONS
+     * ============================================
+     */
+    function generateCardID(shift, locName, tlName) {
+        return `card-${shift}-${locName}-${tlName}`.replace(/\s+/g, '-');
+    }
+
+    function escapeHTML(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    function triggerUpdatePulse() {
+        elements.mainHeader.classList.add('pulse-update');
+        setTimeout(() => {
+            elements.mainHeader.classList.remove('pulse-update');
+        }, 600);
+    }
+
+    /**
+     * ============================================
+     * APP INITIALIZATION ON LOAD
+     * ============================================
+     */
+    window.onload = initializeApp;
 </script>
+
 </body>
 </html>
