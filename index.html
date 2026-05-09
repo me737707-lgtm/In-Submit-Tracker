@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>In Submit Tracker Dashboard</title>
+    <style>
+        /* CSS Styling */
+        :root {
+            --bg-color: #f4f7f6;
+            --primary-color: #2c3e50;
+            --secondary-color: #e74c3c;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .refresh-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .refresh-btn:hover {
+            background-color: #1a252f;
+        }
+
+        .loader {
+            display: none;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .location-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 20px;
+            border-top: 4px solid var(--secondary-color);
+        }
+
+        .location-card h2 {
+            margin-top: 0;
+            color: var(--primary-color);
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .badge {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 14px;
+        }
+
+        .user-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .user-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 16px;
+        }
+
+        .user-list li:last-child {
+            border-bottom: none;
+        }
+
+        .error-msg {
+            color: var(--secondary-color);
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>نظام التتبع (Not Submitted Users)</h1>
+        <p>تحديث البيانات بشكل حي من Google Sheets</p>
+        <button class="refresh-btn" onclick="fetchData()">تحديث البيانات</button>
+        <div class="loader" id="loader"></div>
+    </header>
+
+    <div class="dashboard" id="dashboard">
+        </div>
+
+    <script>
+        // JavaScript Logic
+        
+        // ==== ضع رابط الـ Web App الخاص بك هنا ====
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec'; 
+        
+        const dashboard = document.getElementById('dashboard');
+        const loader = document.getElementById('loader');
+
+        async function fetchData() {
+            dashboard.innerHTML = '';
+            loader.style.display = 'block';
+
+            try {
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Network response was not ok');
+                
+                const data = await response.json();
+                loader.style.display = 'none';
+
+                if(data.error) {
+                    dashboard.innerHTML = `<p class="error-msg">${data.error}</p>`;
+                    return;
+                }
+
+                // إذا لم يكن هناك أشخاص متأخرين
+                if (Object.keys(data).length === 0) {
+                    dashboard.innerHTML = `<h3 style="text-align:center; width:100%; color:green;">الجميع قام بالتسليم اليوم! 🎉</h3>`;
+                    return;
+                }
+
+                renderDashboard(data);
+
+            } catch (error) {
+                loader.style.display = 'none';
+                dashboard.innerHTML = `<p class="error-msg">حدث خطأ أثناء جلب البيانات: ${error.message}</p>`;
+                console.error("Error fetching data:", error);
+            }
+        }
+
+        function renderDashboard(data) {
+            // نمر على كل لوكيشن في الـ JSON وننشئ كارت له
+            for (const [location, users] of Object.entries(data)) {
+                
+                // تخطي اللوكيشن الفارغ إن وجد
+                if(!location || location.trim() === "") continue;
+
+                const card = document.createElement('div');
+                card.className = 'location-card';
+
+                const header = document.createElement('h2');
+                header.innerHTML = `${location} <span class="badge">${users.length}</span>`;
+                
+                const ul = document.createElement('ul');
+                ul.className = 'user-list';
+
+                users.forEach(user => {
+                    const li = document.createElement('li');
+                    li.textContent = user.username;
+                    ul.appendChild(li);
+                });
+
+                card.appendChild(header);
+                card.appendChild(ul);
+                dashboard.appendChild(card);
+            }
+        }
+
+        // تشغيل الجلب التلقائي عند فتح الصفحة
+        window.onload = fetchData;
+    </script>
+</body>
+</html>
