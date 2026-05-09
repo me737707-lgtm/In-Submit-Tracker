@@ -3,204 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>In Submit Tracker Dashboard</title>
+    <title>In Submit Tracker Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* CSS Styling */
         :root {
-            --bg-color: #f4f7f6;
-            --primary-color: #2c3e50;
-            --secondary-color: #e74c3c;
-            --card-bg: #ffffff;
-            --text-color: #333;
+            --bg-body: #f0f2f5;
+            --bg-card: #ffffff;
+            --text-main: #1c1e21;
+            --text-sub: #606770;
+            --primary: #007bff;
+            --danger: #dc3545;
+            --border: #ddd;
+        }
+
+        [data-theme="dark"] {
+            --bg-body: #18191a;
+            --bg-card: #242526;
+            --text-main: #e4e6eb;
+            --text-sub: #b0b3b8;
+            --primary: #2d88ff;
+            --border: #3e4042;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
             margin: 0;
             padding: 20px;
+            transition: 0.3s;
         }
 
+        .container { max-width: 1300px; margin: 0 auto; }
+
         header {
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: var(--bg-card);
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .controls { display: flex; gap: 15px; align-items: center; }
+
+        select, input, button {
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: var(--bg-card);
+            color: var(--text-main);
+        }
+
+        .shift-section {
             margin-bottom: 40px;
         }
 
-        header h1 {
-            color: var(--primary-color);
-            margin-bottom: 10px;
+        .shift-title {
+            font-size: 24px;
+            border-right: 5px solid var(--primary);
+            padding-right: 15px;
+            margin-bottom: 20px;
+            color: var(--primary);
         }
 
-        .refresh-btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .refresh-btn:hover {
-            background-color: #1a252f;
-        }
-
-        .loader {
-            display: none;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .dashboard {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
-        .location-card {
-            background: var(--card-bg);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            padding: 20px;
-            border-top: 4px solid var(--secondary-color);
+        .card {
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            overflow: hidden;
         }
 
-        .location-card h2 {
-            margin-top: 0;
-            color: var(--primary-color);
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
+        .card-header {
+            background: rgba(0,0,0,0.03);
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
             display: flex;
             justify-content: space-between;
-        }
-
-        .badge {
-            background-color: var(--secondary-color);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 14px;
-        }
-
-        .user-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .user-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
-            font-size: 16px;
-        }
-
-        .user-list li:last-child {
-            border-bottom: none;
-        }
-
-        .error-msg {
-            color: var(--secondary-color);
-            text-align: center;
             font-weight: bold;
+        }
+
+        .user-item {
+            padding: 10px 15px;
+            border-bottom: 1px dotted var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-email { font-weight: 600; color: var(--danger); font-size: 14px; }
+        .user-meta { font-size: 12px; color: var(--text-sub); margin-top: 4px; }
+
+        .theme-toggle { cursor: pointer; font-size: 20px; }
+        
+        .loader { 
+            display: none; text-align: center; padding: 50px; font-size: 20px; 
         }
     </style>
 </head>
 <body>
 
+<div class="container">
     <header>
-        <h1>نظام التتبع (Not Submitted Users)</h1>
-        <p>تحديث البيانات بشكل حي من Google Sheets</p>
-        <button class="refresh-btn" onclick="fetchData()">تحديث البيانات</button>
-        <div class="loader" id="loader"></div>
+        <h2><i class="fas fa-clipboard-check"></i> In Submit Tracker</h2>
+        <div class="controls">
+            <input type="date" id="datePicker">
+            <button onclick="fetchData()"><i class="fas fa-sync"></i> تحديث</button>
+            <div class="theme-toggle" onclick="toggleTheme()"><i class="fas fa-moon" id="themeIcon"></i></div>
+        </div>
     </header>
 
-    <div class="dashboard" id="dashboard">
-        </div>
+    <div id="loader" class="loader"><i class="fas fa-spinner fa-spin"></i> جاري تحميل البيانات...</div>
+    <div id="content"></div>
+</div>
 
-    <script>
-        // JavaScript Logic
+<script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec'; // ضعه هنا
+
+    // ضبط تاريخ اليوم تلقائياً
+    window.onload = () => {
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('datePicker').value = today;
         
-        // ==== ضع رابط الـ Web App الخاص بك هنا ====
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec'; 
+        // استعادة الثيم
+        if(localStorage.getItem('theme') === 'dark') toggleTheme();
+        fetchData();
+    };
+
+    function toggleTheme() {
+        const body = document.body;
+        const icon = document.getElementById('themeIcon');
+        if(body.hasAttribute('data-theme')) {
+            body.removeAttribute('data-theme');
+            icon.className = 'fas fa-moon';
+            localStorage.setItem('theme', 'light');
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            icon.className = 'fas fa-sun';
+            localStorage.setItem('theme', 'dark');
+        }
+    }
+
+    async function fetchData() {
+        const dateInput = document.getElementById('datePicker').value;
+        // تحويل التاريخ لصيغة dd-mm-yyyy للـ API
+        const formattedDate = dateInput.split('-').reverse().join('-');
         
-        const dashboard = document.getElementById('dashboard');
+        const content = document.getElementById('content');
         const loader = document.getElementById('loader');
+        
+        content.innerHTML = '';
+        loader.style.display = 'block';
 
-        async function fetchData() {
-            dashboard.innerHTML = '';
-            loader.style.display = 'block';
+        try {
+            const res = await fetch(`${API_URL}?date=${formattedDate}`);
+            const result = await res.json();
+            loader.style.display = 'none';
 
-            try {
-                const response = await fetch(API_URL);
-                if (!response.ok) throw new Error('Network response was not ok');
-                
-                const data = await response.json();
-                loader.style.display = 'none';
-
-                if(data.error) {
-                    dashboard.innerHTML = `<p class="error-msg">${data.error}</p>`;
-                    return;
-                }
-
-                // إذا لم يكن هناك أشخاص متأخرين
-                if (Object.keys(data).length === 0) {
-                    dashboard.innerHTML = `<h3 style="text-align:center; width:100%; color:green;">الجميع قام بالتسليم اليوم! 🎉</h3>`;
-                    return;
-                }
-
-                renderDashboard(data);
-
-            } catch (error) {
-                loader.style.display = 'none';
-                dashboard.innerHTML = `<p class="error-msg">حدث خطأ أثناء جلب البيانات: ${error.message}</p>`;
-                console.error("Error fetching data:", error);
+            if (!result.data || Object.keys(result.data).length === 0) {
+                content.innerHTML = '<h3 style="text-align:center">🎉 لا يوجد متأخرين لهذا اليوم!</h3>';
+                return;
             }
+
+            renderData(result.data);
+        } catch (e) {
+            loader.style.display = 'none';
+            alert("خطأ في جلب البيانات");
         }
+    }
 
-        function renderDashboard(data) {
-            // نمر على كل لوكيشن في الـ JSON وننشئ كارت له
-            for (const [location, users] of Object.entries(data)) {
-                
-                // تخطي اللوكيشن الفارغ إن وجد
-                if(!location || location.trim() === "") continue;
+    function renderData(shifts) {
+        const content = document.getElementById('content');
+        
+        for (const [shiftName, locations] of Object.entries(shifts)) {
+            const shiftSection = document.createElement('div');
+            shiftSection.className = 'shift-section';
+            shiftSection.innerHTML = `<div class="shift-title">شيفت: ${shiftName}</div>`;
+            
+            const grid = document.createElement('div');
+            grid.className = 'grid';
 
+            for (const [locName, users] of Object.entries(locations)) {
                 const card = document.createElement('div');
-                card.className = 'location-card';
-
-                const header = document.createElement('h2');
-                header.innerHTML = `${location} <span class="badge">${users.length}</span>`;
-                
-                const ul = document.createElement('ul');
-                ul.className = 'user-list';
-
-                users.forEach(user => {
-                    const li = document.createElement('li');
-                    li.textContent = user.username;
-                    ul.appendChild(li);
-                });
-
-                card.appendChild(header);
-                card.appendChild(ul);
-                dashboard.appendChild(card);
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-header">
+                        <span>${locName}</span>
+                        <span style="color:var(--danger)">${users.length}</span>
+                    </div>
+                    <div class="card-body">
+                        ${users.map(u => `
+                            <div class="user-item">
+                                <span class="user-email">${u.email}</span>
+                                <span class="user-meta">TL: ${u.tl} | PC: ${u.pc}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                grid.appendChild(card);
             }
+            
+            shiftSection.appendChild(grid);
+            content.appendChild(shiftSection);
         }
-
-        // تشغيل الجلب التلقائي عند فتح الصفحة
-        window.onload = fetchData;
-    </script>
+    }
+</script>
 </body>
 </html>
