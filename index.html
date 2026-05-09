@@ -22,6 +22,8 @@
             --accent-emerald-glow: rgba(110, 231, 183, 0.5);
             --accent-crimson: #fb7185;
             --accent-crimson-glow: rgba(251, 113, 133, 0.5);
+            --accent-yellow: #fbbf24;
+            --accent-yellow-glow: rgba(251, 191, 36, 0.4);
             --text-primary: #ffffff;
             --text-secondary: #cbd5e1;
             --text-muted: #94a3b8;
@@ -140,20 +142,42 @@
         .brand-text h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.02em; color: var(--text-bright); }
         .brand-text p { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; }
 
-        .live-indicator { 
+        /* Status Indicator */
+        .status-indicator { 
             display: flex; align-items: center; gap: var(--space-sm); font-weight: 700; font-size: 12px;
-            padding: 8px 16px; background: rgba(110, 231, 183, 0.12);
-            border: 1px solid rgba(110, 231, 183, 0.3); border-radius: 9999px; color: var(--accent-emerald);
+            padding: 8px 16px; border-radius: 9999px; transition: all var(--transition-fast);
+        }
+
+        .status-indicator.live {
+            background: rgba(110, 231, 183, 0.12);
+            border: 1px solid rgba(110, 231, 183, 0.3);
+            color: var(--accent-emerald);
+        }
+
+        .status-indicator.demo {
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.3);
+            color: var(--accent-yellow);
+        }
+
+        .status-indicator.error {
+            background: rgba(251, 113, 133, 0.12);
+            border: 1px solid rgba(251, 113, 133, 0.3);
+            color: var(--accent-crimson);
         }
         
         .status-dot { 
-            height: 10px; width: 10px; background: var(--accent-emerald); border-radius: 50%; 
-            box-shadow: 0 0 14px var(--accent-emerald), 0 0 28px var(--accent-emerald-glow);
+            height: 10px; width: 10px; border-radius: 50%; 
+            box-shadow: 0 0 14px currentColor;
             animation: pulse-dot 2s ease-in-out infinite; position: relative;
         }
 
+        .status-dot.live-dot { background: var(--accent-emerald); }
+        .status-dot.demo-dot { background: var(--accent-yellow); }
+        .status-dot.error-dot { background: var(--accent-crimson); }
+
         .status-dot::after {
-            content: ''; position: absolute; inset: -4px; border-radius: 50%; background: var(--accent-emerald);
+            content: ''; position: absolute; inset: -4px; border-radius: 50%; background: currentColor;
             opacity: 0.25; animation: ripple 2s ease-out infinite;
         }
 
@@ -188,9 +212,8 @@
             background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;
         }
 
-        /* LOADER & ERROR STATES */
+        /* LOADER */
         #loader { text-align: center; padding: 80px 20px; animation: fadeIn 0.5s ease; }
-
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         .loader-spinner { display: inline-flex; flex-direction: column; align-items: center; gap: var(--space-md); }
@@ -211,65 +234,220 @@
 
         @keyframes dotPulse { 0%, 80%, 100% { opacity: 0.3; } 40% { opacity: 1; } }
 
-        /* ERROR STATE */
+        /* ERROR STATE - Enhanced */
         .error-state {
-            background: rgba(251, 113, 133, 0.08);
+            background: linear-gradient(135deg, rgba(251, 113, 133, 0.08), rgba(251, 113, 133, 0.03));
             border: 1px solid rgba(251, 113, 133, 0.25);
             border-radius: var(--radius-lg);
             padding: 40px;
-            text-align: center;
-            max-width: 600px;
+            max-width: 700px;
             margin: 40px auto;
+            animation: shakeIn 0.6s var(--transition-spring);
+        }
+
+        @keyframes shakeIn {
+            0% { opacity: 0; transform: translateY(20px) scale(0.95); }
+            50% { transform: translateY(-5px) scale(1.02); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .error-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
         }
 
         .error-icon {
-            width: 64px; height: 64px;
-            background: rgba(251, 113, 133, 0.15);
+            width: 72px; height: 72px;
+            background: linear-gradient(135deg, rgba(251, 113, 133, 0.2), rgba(251, 113, 133, 0.05));
+            border: 2px solid rgba(251, 113, 133, 0.3);
             border-radius: 50%;
             display: flex; align-items: center; justify-content: center;
-            font-size: 28px; color: var(--accent-crimson);
-            margin: 0 auto 20px;
+            font-size: 32px; color: var(--accent-crimson);
+            flex-shrink: 0;
+            animation: errorPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes errorPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(251, 113, 133, 0.3); }
+            50% { box-shadow: 0 0 30px rgba(251, 113, 133, 0.15); }
+        }
+
+        .error-title-section {
+            flex: 1;
+        }
+
+        .error-code {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--accent-crimson);
+            line-height: 1;
+            letter-spacing: -0.03em;
+            margin-bottom: 4px;
         }
 
         .error-title {
-            font-size: 20px; font-weight: 700; color: var(--accent-crimson);
-            margin-bottom: 10px;
+            font-size: 20px; font-weight: 700; color: var(--text-bright);
+            margin-bottom: 4px;
+        }
+
+        .error-subtitle {
+            font-size: 14px; color: var(--text-secondary);
         }
 
         .error-message {
-            font-size: 14px; color: var(--text-secondary);
-            margin-bottom: 20px; line-height: 1.6;
+            font-size: 15px; color: var(--text-secondary);
+            margin-bottom: 28px; line-height: 1.7;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid var(--accent-crimson);
+            border-radius: var(--radius-sm);
         }
 
-        .retry-btn {
-            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
-            color: var(--bg-primary);
-            border: none;
-            padding: 12px 28px;
+        .error-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 24px;
+        }
+
+        .btn {
+            padding: 12px 24px;
             border-radius: var(--radius-sm);
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
             transition: all var(--transition-fast);
+            border: none;
             font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .retry-btn:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px var(--accent-indigo-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(148, 163, 184, 0.1);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(148, 163, 184, 0.15);
+            border-color: var(--border-glass);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--accent-emerald), rgba(110, 231, 183, 0.7));
+            color: var(--bg-primary);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-emerald-glow);
+        }
+
+        /* Solution Box */
+        .solution-box {
+            background: linear-gradient(135deg, rgba(251, 191, 36, 0.1), rgba(251, 191, 36, 0.03));
+            border: 1px solid rgba(251, 191, 36, 0.25);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .solution-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .solution-list {
+            list-style: none;
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .solution-list li {
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 6px;
+        }
+
+        .solution-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--accent-yellow);
+            font-weight: bold;
+        }
+
+        /* API URL Input */
+        .api-url-input-group {
+            margin-top: 20px;
+            padding: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: var(--radius-sm);
+        }
+
+        .api-url-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .api-url-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            color: var(--text-bright);
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            outline: none;
+            transition: all var(--transition-fast);
+        }
+
+        .api-url-input:focus {
+            border-color: var(--accent-indigo);
+            box-shadow: 0 0 0 3px var(--accent-indigo-glow);
         }
 
         .debug-info {
             margin-top: 20px;
             padding: 16px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.35);
             border-radius: var(--radius-sm);
             font-family: 'Courier New', monospace;
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             text-align: left;
             overflow-x: auto;
+            max-height: 200px;
+            overflow-y: auto;
         }
+
+        .debug-info strong { color: var(--text-secondary); }
 
         /* Silent Update Notification */
         .silent-update {
@@ -319,6 +497,23 @@
             background: linear-gradient(135deg, var(--accent-emerald), rgba(110, 231, 183, 0.5));
             border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
             font-size: 20px; color: var(--bg-primary); box-shadow: 0 4px 24px var(--accent-emerald-glow);
+        }
+
+        .demo-badge {
+            font-size: 11px;
+            background: linear-gradient(135deg, var(--accent-yellow), rgba(251, 191, 36, 0.7));
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            animation: badgeGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes badgeGlow {
+            0%, 100% { box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+            50% { box-shadow: 0 0 20px rgba(251, 191, 36, 0.5); }
         }
 
         .room-group { margin-top: var(--space-xl); margin-left: var(--space-lg); padding-left: var(--space-lg); border-left: 3px solid var(--border-glass); }
@@ -515,6 +710,9 @@
             .split-view { grid-template-columns: 1fr; }
             .location-title { font-size: 22px; }
             .room-group { margin-left: var(--space-md); padding-left: var(--space-md); }
+            
+            .error-header { flex-direction: column; text-align: center; }
+            .error-actions { justify-content: center; }
         }
 
         ::-webkit-scrollbar { width: 8px; height: 8px; }
@@ -555,9 +753,9 @@
                     <p>Live Operations Dashboard</p>
                 </div>
             </div>
-            <div class="live-indicator">
-                <div class="status-dot"></div>
-                <span>LIVE</span>
+            <div class="status-indicator" id="statusIndicator">
+                <div class="status-dot live-dot" id="statusDot"></div>
+                <span id="statusText">INITIALIZING...</span>
             </div>
         </div>
         <div class="controls">
@@ -582,9 +780,11 @@
  * ============================================
  */
 const CONFIG = {
+    // ⚠️ DEFAULT API URL - CHANGE THIS TO YOUR WORKING URL
     API_URL: 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec',
-    REFRESH_INTERVAL: 10000, // 10 seconds for safety
-    REQUEST_TIMEOUT: 15000,   // 15 seconds timeout
+    
+    REFRESH_INTERVAL: 10000,
+    REQUEST_TIMEOUT: 15000,
     ANIMATION_STAGGER_DELAY: 80,
     
     // Location grouping configuration
@@ -602,35 +802,88 @@ const CONFIG = {
         ]
     },
     
-    // Demo data for testing when API fails
+    // Comprehensive demo data for testing
     DEMO_DATA: {
         "M": {
             "NC Unit 106": {
                 "Rahma Sayed (M)": {
                     submitted: [
-                        { email: "user1@example.com", pc: "me-C-4-M" },
-                        { email: "user2@example.com", pc: "PC-Station-01" }
+                        { email: "ahmed.mohamed@company.com", pc: "me-C-4-M" },
+                        { email: "sara.ali@company.com", pc: "PC-Station-01" },
+                        { email: "omar.hassan@company.com", pc: "Workstation-A" }
                     ],
                     notSubmitted: [
-                        { email: "pending1@example.com", pc: "me-C-5-N" },
-                        { email: "pending2@example.com", pc: "PC-Station-03" }
+                        { email: "fatma.ibrahim@company.com", pc: "me-C-5-N" },
+                        { email: "khaled.salem@company.com", pc: "PC-Lab-03" }
                     ]
                 },
                 "Omnia Mohamed (M)": {
-                    submitted: [{ email: "user3@example.com", pc: "PC-Station-05" }],
-                    notSubmitted: [{ email: "pending3@example.com", pc: "me-D-2-O" }]
+                    submitted: [
+                        { email: "nada.fathy@company.com", pc: "PC-Station-05" },
+                        { email: "mohsen.ramzy@company.com", pc: "Desk-07" }
+                    ],
+                    notSubmitted: [
+                        { email: "layla.adel@company.com", pc: "me-D-2-O" }
+                    ]
+                },
+                "Sara Atef (M)": {
+                    submitted: [
+                        { email: "youssef.kamel@company.com", pc: "Terminal-09" }
+                    ],
+                    notSubmitted: [
+                        { email: "rana.mostafa@company.com", pc: "PC-New-01" },
+                        { email: "hossam.farid@company.com", pc: "Lab-PC-04" }
+                    ]
                 }
             },
             "SF Floor 4 Room 1": {
-                "Sara Atef (M)": {
-                    submitted: [{ email: "user4@example.com", pc: "PC-Room1-01" }],
+                "Team Leader Alpha": {
+                    submitted: [
+                        { email: "ali.abdullah@company.com", pc: "Room1-PC1" },
+                        { email: "mona.zaki@company.com", pc: "Room1-PC2" }
+                    ],
                     notSubmitted: []
                 }
             },
             "SF Floor 4 Room 2": {
-                "Team Leader X": {
+                "Team Leader Beta": {
                     submitted: [],
-                    notSubmitted: [{ email: "pending4@example.com", pc: "PC-Room2-01" }]
+                    notSubmitted: [
+                        { email: "tamer.nabil@company.com", pc: "Room2-PC1" }
+                    ]
+                }
+            },
+            "SF Floor 4 Room 3": {
+                "Team Leader Gamma": {
+                    submitted: [
+                        { email: "dina.mahmoud@company.com", pc: "Room3-PC1" },
+                        { email: "karim.sherif@company.com", pc: "Room3-PC2" },
+                        { email: "salma.hassan@company.com", pc: "Room3-PC3" }
+                    ],
+                    notSubmitted: []
+                }
+            },
+            "NC Unit 108": {
+                "Supervisor X": {
+                    submitted: [
+                        { email: "amr.tawfik@company.com", pc: "Unit108-A" }
+                    ],
+                    notSubmitted: [
+                        { email: "nourhan.khaled@company.com", pc: "Unit108-B" },
+                        { email: "ibrahim.fouad@company.com", pc: "Unit108-C" }
+                    ]
+                }
+            }
+        },
+        "N": {
+            "NC Unit 102": {
+                "Night Lead A": {
+                    submitted: [
+                        { email: "night.user1@company.com", pc: "Night-PC1" }
+                    ],
+                    notSubmitted: [
+                        { email: "night.pending1@company.com", pc: "Night-PC2" }
+                    ]
                 }
             }
         }
@@ -646,7 +899,8 @@ const state = {
     isFirstLoad: true,
     isLoading: false,
     useDemoData: false,
-    lastError: null
+    lastError: null,
+    customApiUrl: null
 };
 
 // DOM Elements
@@ -658,6 +912,9 @@ const elements = {};
  * ============================================
  */
 function initializeApp() {
+    console.log('%c🚀 Submit Tracker v2.0', 'color: #6ee7b7; font-size: 18px; font-weight: bold;');
+    console.log('%c⚠️ Enhanced Error Handling & Demo Mode', 'color: #fbbf24; font-size: 12px;');
+    
     // Cache DOM elements
     elements.contentArea = document.getElementById('contentArea');
     elements.shiftFilter = document.getElementById('shiftFilter');
@@ -666,9 +923,15 @@ function initializeApp() {
     elements.searchInput = document.getElementById('searchInput');
     elements.mainHeader = document.getElementById('mainHeader');
     elements.silentUpdate = document.getElementById('silentUpdate');
+    elements.statusIndicator = document.getElementById('statusIndicator');
+    elements.statusDot = document.getElementById('statusDot');
+    elements.statusText = document.getElementById('statusText');
 
     // Set default date
     elements.datePicker.value = new Date().toISOString().split('T')[0];
+
+    // Set initial status
+    updateStatusIndicator('loading');
 
     // Initial fetch
     fetchData(true);
@@ -683,11 +946,31 @@ function initializeApp() {
             elements.searchInput.focus();
         }
     });
+}
 
-    // Debug: Log config
-    console.log('%c🚀 Submit Tracker Initialized', 'color: #6ee7b7; font-size: 14px; font-weight: bold;');
-    console.log('API URL:', CONFIG.API_URL);
-    console.log('Refresh Interval:', CONFIG.REFRESH_INTERVAL / 1000, 'seconds');
+function updateStatusIndicator(status) {
+    const indicator = elements.statusIndicator;
+    const dot = elements.statusDot;
+    const text = elements.statusText;
+
+    indicator.className = 'status-indicator ' + status;
+    dot.className = 'status-dot ' + status + '-dot';
+
+    switch(status) {
+        case 'live':
+            text.textContent = 'LIVE - Connected';
+            break;
+        case 'demo':
+            text.textContent = 'DEMO MODE';
+            break;
+        case 'error':
+            text.textContent = 'CONNECTION ERROR';
+            break;
+        case 'loading':
+        default:
+            text.textContent = 'CONNECTING...';
+            break;
+    }
 }
 
 /**
@@ -696,69 +979,63 @@ function initializeApp() {
  * ============================================
  */
 async function fetchData(showLoader = false, isManual = false) {
-    // Prevent concurrent requests
-    if (state.isLoading && !isManual) {
-        console.log('⏳ Previous request still loading, skipping...');
-        return;
-    }
+    if (state.isLoading && !isManual) return;
 
+    const apiUrl = state.customApiUrl || CONFIG.API_URL;
     const date = formatDateForAPI(elements.datePicker.value);
-    const fetchUrl = `${CONFIG.URL}?date=${date}`;
+    const fetchUrl = `${apiUrl}?date=${date}`;
     
-    console.log(`📡 Fetching data... Date: ${date}, ShowLoader: ${showLoader}, Manual: ${isManual}`);
+    console.log(`\n%c📡 Fetching Data...`, 'color: #a5b4fc; font-weight: bold;');
+    console.log(`URL: ${fetchUrl}`);
+    console.log(`ShowLoader: ${showLoader} | Manual: ${isManual}`);
 
     try {
         state.isLoading = true;
         
-        if (showLoader || isManual) {
-            showLoadingState(true);
-        }
+        if (showLoader || isManual) showLoadingState(true);
 
-        // Create AbortController for timeout
+        // AbortController for timeout
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), CONFIG.REQUEST_TIMEOUT);
 
-        console.log('🌐 Sending request to:', fetchUrl);
+        console.log('⏱️ Sending request with timeout:', CONFIG.REQUEST_TIMEOUT / 1000, 'seconds');
 
         const response = await fetch(fetchUrl, {
             signal: controller.signal,
             mode: 'cors',
-            headers: {
-                'Accept': 'application/json'
-            }
+            headers: { 'Accept': 'application/json' }
         });
 
         clearTimeout(timeoutId);
 
-        console.log('📊 Response status:', response.status);
+        console.log(`📊 Response Status: ${response.status} ${response.statusText}`);
 
         if (!response.ok) {
-            throw new Error(`HTTP Error: ${response.status} ${response.statusText}`);
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
         }
 
-        // Parse JSON
         let json;
         try {
             json = await response.json();
-            console.log('✅ Parsed JSON:', json);
+            console.log('✅ JSON Parsed Successfully:', json);
         } catch (parseError) {
-            console.error('❌ JSON Parse Error:', parseError);
-            throw new Error('Invalid JSON response from server');
+            console.error('❌ JSON Parse Failed:', parseError);
+            throw new Error('Invalid JSON response');
         }
 
-        // Validate data structure
         const newData = json.data || {};
         
         if (Object.keys(newData).length === 0) {
-            console.warn('⚠️ Empty data received, using demo data');
+            console.warn('⚠️ Empty data received');
             state.useDemoData = true;
             state.rawData = CONFIG.DEMO_DATA;
+            updateStatusIndicator('demo');
         } else {
             state.useDemoData = false;
             state.rawData = newData;
+            updateStatusIndicator('live');
         }
 
-        // Check for changes
         const newDataHash = generateDataHash(state.rawData);
         
         if (newDataHash !== state.lastDataHash) {
@@ -770,49 +1047,48 @@ async function fetchData(showLoader = false, isManual = false) {
                 renderData();
                 state.isFirstLoad = false;
                 
-                if (showLoader || isManual) {
-                    showLoadingState(false);
-                }
+                if (showLoader || isManual) showLoadingState(false);
             } else {
                 showSilentUpdateNotification();
                 smartUpdateUI();
             }
         } else {
-            console.log('✋ No data changes detected');
-            if (showLoader || isManual) {
-                showLoadingState(false);
-            }
+            console.log('✋ No changes detected');
+            if (showLoader || isManual) showLoadingState(false);
         }
 
         state.lastError = null;
 
     } catch (error) {
-        console.error('❌ Fetch Error:', error);
+        console.error('❌ Fetch Error:', error.message);
         state.lastError = error.message;
+        updateStatusIndicator('error');
         
-        // Handle specific errors
-        let errorMessage = 'Failed to load data';
+        let errorMessage = 'Connection Failed';
         let errorDetails = '';
+        let is404Error = false;
 
         if (error.name === 'AbortError') {
             errorMessage = 'Request Timeout';
-            errorDetails = `The server took too long to respond (>${CONFIG.REQUEST_TIMEOUT/1000}s). The API might be slow or unavailable.`;
-        } else if (error.message.includes('HTTP Error')) {
+            errorDetails = `Server took too long to respond (> ${CONFIG.REQUEST_TIMEOUT / 1000}s). The API might be slow or offline.`;
+        } else if (error.message.includes('404')) {
+            errorMessage = 'API Not Found (404)';
+            errorDetails = `The Google Apps Script URL doesn't exist or has been deleted.`;
+            is404Error = true;
+        } else if (error.message.includes('HTTP')) {
             errorMessage = 'Server Error';
             errorDetails = error.message;
         } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-            errorMessage = 'Connection Failed';
-            errorDetails = 'Cannot connect to the server. This could be a network issue or CORS problem.';
-        } else if (error.message.includes('JSON')) {
-            errorMessage = 'Invalid Response';
-            errorDetails = 'The server returned invalid data.';
+            errorMessage = 'Network Error';
+            errorDetails = 'Cannot connect to the server. Check your internet connection or CORS settings.';
+        } else {
+            errorMessage = 'Unknown Error';
+            errorDetails = error.message;
         }
-
-        console.error(`Error Details: ${errorMessage}: ${errorDetails}`);
 
         // Use demo data as fallback
         if (!state.useDemoData) {
-            console.log('🔄 Falling back to demo data...');
+            console.log('🔄 Switching to DEMO DATA mode...');
             state.useDemoData = true;
             state.rawData = CONFIG.DEMO_DATA;
             
@@ -820,9 +1096,9 @@ async function fetchData(showLoader = false, isManual = false) {
             renderData();
         }
 
-        // Show error state on manual/first load
+        // Show error on first load or manual refresh
         if (showLoader || isManual || state.isFirstLoad) {
-            showErrorState(errorMessage, errorDetails, error);
+            showErrorState(errorMessage, errorDetails, error, is404Error);
             state.isFirstLoad = false;
         }
 
@@ -832,8 +1108,24 @@ async function fetchData(showLoader = false, isManual = false) {
 }
 
 function manualRefresh() {
-    console.log('🔄 Manual refresh triggered...');
+    console.log('🔄 Manual Refresh triggered by user...');
     fetchData(true, true);
+}
+
+function useCustomApiUrl() {
+    const input = document.getElementById('customApiUrlInput');
+    const newUrl = input.value.trim();
+
+    if (!newUrl) {
+        alert('Please enter a valid API URL');
+        return;
+    }
+
+    console.log('🔧 Setting custom API URL:', newUrl);
+    state.customApiUrl = newUrl;
+    
+    // Try fetching immediately
+    manualRefresh();
 }
 
 /**
@@ -848,7 +1140,7 @@ function showLoadingState(show) {
                 <div class="loader-spinner">
                     <div class="spinner-ring"></div>
                     <div class="loader-text">
-                        Syncing with Google Sheets<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span>
+                        Connecting to server<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span>
                     </div>
                 </div>
             </div>
@@ -856,38 +1148,104 @@ function showLoadingState(show) {
     }
 }
 
-function showErrorState(title, message, error) {
+function showErrorState(title, message, error, is404 = false) {
     const timestamp = new Date().toLocaleTimeString();
+    const currentUrl = state.customApiUrl || CONFIG.API_URL;
     
+    let solutionHTML = '';
+
+    if (is404) {
+        solutionHTML = `
+            <div class="solution-box">
+                <div class="solution-title">
+                    <i class="fas fa-lightbulb"></i>
+                    How to Fix This Error (404)
+                </div>
+                <ul class="solution-list">
+                    <li><strong>Check the Google Apps Script URL</strong> - Make sure it's correct and not deleted</li>
+                    <li><strong>Redeploy the script</strong> - Go to Google Apps Script → Deploy → Manage deployments → Edit → Redeploy</li>
+                    <li><strong>Check permissions</strong> - Ensure "Anyone" can access the script</li>
+                    <li><strong>Use a working URL below</strong> - Enter a valid API URL in the field below</li>
+                    <li><strong>Or use Demo Mode</strong> - The dashboard is currently showing sample data</li>
+                </ul>
+            </div>
+            
+            <div class="api-url-input-group">
+                <label class="api-url-label" for="customApiUrlInput">
+                    <i class="fas fa-link"></i> Enter New API URL (Optional)
+                </label>
+                <input type="text" 
+                       id="customApiUrlInput" 
+                       class="api-url-input" 
+                       placeholder="https://script.google.com/macros/s/YOUR_ID/exec"
+                       value="">
+                <button class="btn btn-success" onclick="useCustomApiUrl()" style="margin-top: 10px;">
+                    <i class="fas fa-plug"></i> Connect to This URL
+                </button>
+            </div>
+        `;
+    }
+
     elements.contentArea.innerHTML = `
         <div class="error-state">
-            <div class="error-icon">
-                <i class="fas fa-exclamation-triangle"></i>
+            <div class="error-header">
+                <div class="error-icon">
+                    <i class="fas ${is404 ? 'fa-unlink' : 'fa-exclamation-triangle'}"></i>
+                </div>
+                <div class="error-title-section">
+                    <div class="error-code">${is404 ? '404' : '⚠'}</div>
+                    <div class="error-title">${title}</div>
+                    <div class="error-subtitle">${message}</div>
+                </div>
             </div>
-            <div class="error-title">${title}</div>
-            <div class="error-message">${message}</div>
-            <button class="retry-btn" onclick="manualRefresh()">
-                <i class="fas fa-redo"></i> Try Again
-            </button>
+            
+            <div class="error-message">
+                <strong>What happened:</strong> ${message}<br><br>
+                <strong>Current status:</strong> Dashboard is running in <span style="color: var(--accent-yellow); font-weight: bold;">DEMO MODE</span> with sample data.<br>
+                You can still explore all features and test the interface!
+            </div>
+
+            <div class="error-actions">
+                <button class="btn btn-primary" onclick="manualRefresh()">
+                    <i class="fas fa-redo"></i> Try Again
+                </button>
+                <button class="btn btn-success" onclick="loadDemoOnly()">
+                    <i class="fas fa-eye"></i> Show Demo Dashboard
+                </button>
+            </div>
+
+            ${solutionHTML}
+
             <div class="debug-info">
-                <strong>Debug Info:</strong><br>
+                <strong>🔍 Technical Details:</strong><br>
+                ────────────────────────────────<br>
                 Timestamp: ${timestamp}<br>
-                Error: ${error?.message || 'Unknown'}<br>
-                Using Demo Data: ${state.useDemoData ? 'Yes' : 'No'}<br>
-                API URL: ${CONFIG.API_URL}<br>
+                Error Type: ${error?.name || 'Unknown'}<br>
+                Error Message: ${error?.message || 'N/A'}<br>
+                Using Demo Data: ${state.useDemoData ? '✅ Yes' : 'No'}<br>
+                API URL Attempted: ${currentUrl.substring(0, 60)}...<br>
+                Request Timeout: ${CONFIG.REQUEST_TIMEOUT / 1000}s<br>
+                ────────────────────────────────<br>
                 <br>
-                <strong>Console:</strong> Press F12 and check the Console tab for more details.
+                💡 <strong>Tip:</strong> Open browser Console (F12) for more details
             </div>
         </div>
     `;
 }
 
+function loadDemoOnly() {
+    console.log('🎭 Loading Demo Dashboard only...');
+    state.useDemoData = true;
+    state.rawData = CONFIG.DEMO_DATA;
+    updateStatusIndicator('demo');
+    updateFilters();
+    renderData();
+}
+
 function showSilentUpdateNotification() {
     if (elements.silentUpdate) {
         elements.silentUpdate.classList.add('show');
-        setTimeout(() => {
-            elements.silentUpdate.classList.remove('show');
-        }, 2500);
+        setTimeout(() => elements.silentUpdate.classList.remove('show'), 2500);
     }
 }
 
@@ -933,9 +1291,7 @@ function updateFilters() {
         Object.keys(state.rawData[shift]).forEach(loc => locations.add(loc));
     });
 
-    Object.keys(CONFIG.LOCATION_GROUPS).forEach(groupName => {
-        locations.add(groupName);
-    });
+    Object.keys(CONFIG.LOCATION_GROUPS).forEach(groupName => locations.add(groupName));
 
     const currentShift = elements.shiftFilter.value;
     const currentLoc = elements.locFilter.value;
@@ -1035,7 +1391,7 @@ function renderData() {
     const selectedShift = elements.shiftFilter.value;
     const selectedLocation = elements.locFilter.value;
 
-    console.log('🎨 Rendering data...', { selectedShift, selectedLocation, useDemoData: state.useDemoData });
+    console.log('🎨 Rendering Dashboard...', { useDemo: state.useDemoData, shifts: Object.keys(state.rawData).length });
 
     elements.contentArea.innerHTML = '';
 
@@ -1120,7 +1476,7 @@ function createGroupedLocationSection(groupName, shift, allLocations, delayIndex
         <div class="location-title">
             <div class="location-icon"><i class="fas fa-building"></i></div>
             ${groupName}
-            ${state.useDemoData ? '<span style="font-size: 12px; background: #fbbf24; color: #000; padding: 2px 8px; border-radius: 4px; font-weight: bold;">DEMO</span>' : ''}
+            ${state.useDemoData ? '<span class="demo-badge">DEMO DATA</span>' : ''}
             <span style="font-size: 14px; color: var(--text-muted); font-weight: 600;">(${availableRooms.length} rooms)</span>
         </div>
         ${createHeroStatsHTML({ submitted: totalSubmitted, notSubmitted: totalNotSubmitted, total, percentage })}
@@ -1163,6 +1519,7 @@ function createLocationSection(locName, teams, shift, delay) {
         <div class="location-title">
             <div class="location-icon"><i class="fas fa-map-marker-alt"></i></div>
             ${locName}
+            ${state.useDemoData ? '<span class="demo-badge">DEMO</span>' : ''}
         </div>
         ${createHeroStatsHTML(stats)}
         ${createTeamsGridHTML(teams, shift, locName)}
