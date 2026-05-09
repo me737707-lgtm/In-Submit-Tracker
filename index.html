@@ -17,41 +17,42 @@
             /* Background Palette - Deep Slate/Obsidian */
             --bg-primary: #0a0e17;
             --bg-secondary: #111827;
-            --bg-card: rgba(17, 24, 39, 0.7);
-            --bg-glass: rgba(255, 255, 255, 0.03);
-            --bg-glass-hover: rgba(255, 255, 255, 0.06);
+            --bg-card: rgba(17, 24, 39, 0.85);
+            --bg-glass: rgba(255, 255, 255, 0.04);
+            --bg-glass-hover: rgba(255, 255, 255, 0.08);
             
-            /* Neon Accent Colors */
-            --accent-indigo: #818cf8;
-            --accent-indigo-glow: rgba(129, 140, 248, 0.4);
-            --accent-emerald: #34d399;
-            --accent-emerald-glow: rgba(52, 211, 153, 0.4);
-            --accent-crimson: #f43f5e;
-            --accent-crimson-glow: rgba(244, 63, 94, 0.4);
+            /* Neon Accent Colors - Increased Contrast */
+            --accent-indigo: #a5b4fc;
+            --accent-indigo-glow: rgba(165, 180, 252, 0.5);
+            --accent-emerald: #6ee7b7;
+            --accent-emerald-glow: rgba(110, 231, 183, 0.5);
+            --accent-crimson: #fb7185;
+            --accent-crimson-glow: rgba(251, 113, 133, 0.5);
             
-            /* Text Colors */
-            --text-primary: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
+            /* Text Colors - Enhanced Readability */
+            --text-primary: #ffffff;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-bright: #f8fafc;
             
             /* Border & Effects */
-            --border-subtle: rgba(148, 163, 184, 0.1);
-            --border-glass: rgba(255, 255, 255, 0.08);
-            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.4);
+            --border-subtle: rgba(148, 163, 184, 0.15);
+            --border-glass: rgba(255, 255, 255, 0.12);
+            --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.5);
             --blur-glass: blur(20px);
             
             /* Spacing Scale */
             --space-xs: 4px;
             --space-sm: 8px;
-            --space-md: 16px;
-            --space-lg: 24px;
-            --space-xl: 32px;
+            --space-md: 12px;
+            --space-lg: 20px;
+            --space-xl: 28px;
             --space-2xl: 48px;
             
             /* Border Radius */
-            --radius-sm: 8px;
-            --radius-md: 12px;
-            --radius-lg: 16px;
+            --radius-sm: 10px;
+            --radius-md: 14px;
+            --radius-lg: 18px;
             --radius-xl: 24px;
             
             /* Transitions */
@@ -72,10 +73,11 @@
         body { 
             font-family: 'Inter', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; 
             background: var(--bg-primary); 
-            color: var(--text-primary); 
+            color: var(--text-bright); 
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
+            line-height: 1.5;
         }
 
         /* Animated Background Grid */
@@ -87,8 +89,8 @@
             width: 100%;
             height: 100%;
             background-image: 
-                linear-gradient(rgba(129, 140, 248, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(129, 140, 248, 0.03) 1px, transparent 1px);
+                linear-gradient(rgba(165, 180, 252, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(165, 180, 252, 0.03) 1px, transparent 1px);
             background-size: 50px 50px;
             pointer-events: none;
             z-index: 0;
@@ -98,11 +100,11 @@
         .ambient-orb {
             position: fixed;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.15;
+            filter: blur(100px);
+            opacity: 0.12;
             pointer-events: none;
             z-index: 0;
-            animation: float 20s ease-in-out infinite;
+            animation: float 25s ease-in-out infinite;
         }
         
         .orb-1 {
@@ -120,7 +122,7 @@
             background: var(--accent-emerald);
             bottom: -150px;
             left: -150px;
-            animation-delay: -7s;
+            animation-delay: -8s;
         }
         
         .orb-3 {
@@ -130,7 +132,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            animation-delay: -14s;
+            animation-delay: -16s;
         }
 
         @keyframes float {
@@ -194,16 +196,16 @@
         }
 
         .logo-icon {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--accent-indigo), var(--accent-emerald));
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
-            color: white;
-            box-shadow: 0 4px 20px var(--accent-indigo-glow);
+            font-size: 24px;
+            color: var(--bg-primary);
+            box-shadow: 0 4px 24px var(--accent-indigo-glow);
             animation: pulse-glow 3s ease-in-out infinite;
         }
 
@@ -213,21 +215,18 @@
         }
 
         .brand-text h1 {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: 800;
             letter-spacing: -0.02em;
-            background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: var(--text-bright);
         }
 
         .brand-text p {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 500;
+            letter-spacing: 0.12em;
+            font-weight: 600;
         }
 
         /* Live Indicator */
@@ -235,11 +234,11 @@
             display: flex; 
             align-items: center; 
             gap: var(--space-sm); 
-            font-weight: 600;
-            font-size: 13px;
-            padding: var(--space-sm) var(--space-md);
-            background: rgba(52, 211, 153, 0.1);
-            border: 1px solid rgba(52, 211, 153, 0.2);
+            font-weight: 700;
+            font-size: 12px;
+            padding: 8px 16px;
+            background: rgba(110, 231, 183, 0.12);
+            border: 1px solid rgba(110, 231, 183, 0.3);
             border-radius: 9999px;
             color: var(--accent-emerald);
         }
@@ -249,7 +248,7 @@
             width: 10px; 
             background: var(--accent-emerald); 
             border-radius: 50%; 
-            box-shadow: 0 0 12px var(--accent-emerald), 0 0 24px var(--accent-emerald-glow);
+            box-shadow: 0 0 14px var(--accent-emerald), 0 0 28px var(--accent-emerald-glow);
             animation: pulse-dot 2s ease-in-out infinite;
             position: relative;
         }
@@ -260,7 +259,7 @@
             inset: -4px;
             border-radius: 50%;
             background: var(--accent-emerald);
-            opacity: 0.3;
+            opacity: 0.25;
             animation: ripple 2s ease-out infinite;
         }
 
@@ -270,7 +269,7 @@
         }
 
         @keyframes ripple {
-            0% { transform: scale(1); opacity: 0.3; }
+            0% { transform: scale(1); opacity: 0.25; }
             100% { transform: scale(2.5); opacity: 0; }
         }
 
@@ -302,10 +301,10 @@
         }
 
         select, input { 
-            background: var(--bg-glass-hover); 
-            color: var(--text-primary); 
+            background: rgba(30, 41, 59, 0.8); 
+            color: var(--text-bright); 
             border: 1px solid var(--border-subtle); 
-            padding: 10px 16px; 
+            padding: 11px 16px; 
             border-radius: var(--radius-sm); 
             outline: none; 
             font-size: 13px;
@@ -317,7 +316,7 @@
 
         select:hover, input:hover {
             border-color: var(--border-glass);
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(30, 41, 59, 0.95);
         }
 
         select:focus, input:focus {
@@ -327,12 +326,12 @@
 
         .search-input {
             padding-left: 42px;
-            min-width: 220px;
+            min-width: 240px;
         }
 
         select {
             cursor: pointer;
-            min-width: 140px;
+            min-width: 150px;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -378,8 +377,9 @@
         }
 
         .loader-text {
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: 0.02em;
+            color: var(--text-secondary);
         }
 
         .loader-dots span {
@@ -395,22 +395,54 @@
             40% { opacity: 1; }
         }
 
+        /* Silent Update Indicator */
+        .silent-update {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: var(--bg-card);
+            backdrop-filter: var(--blur-glass);
+            border: 1px solid var(--accent-emerald);
+            border-radius: var(--radius-md);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-emerald);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 9999;
+        }
+
+        .silent-update.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .silent-update i {
+            animation: spin 2s linear infinite;
+        }
+
         /* ============================================
            SHIFT TAG
            ============================================ */
         .shift-tag { 
-            background: linear-gradient(135deg, rgba(129, 140, 248, 0.15), rgba(129, 140, 248, 0.05));
-            border: 1px solid rgba(129, 140, 248, 0.25);
-            padding: 10px 24px; 
+            background: linear-gradient(135deg, rgba(165, 180, 252, 0.18), rgba(165, 180, 252, 0.06));
+            border: 1px solid rgba(165, 180, 252, 0.3);
+            padding: 11px 26px; 
             border-radius: 9999px; 
             font-size: 13px; 
-            font-weight: 700; 
+            font-weight: 800; 
             margin-bottom: var(--space-xl); 
             display: inline-flex;
             align-items: center;
             gap: var(--space-sm);
             color: var(--accent-indigo);
-            letter-spacing: 0.05em;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
             backdrop-filter: blur(10px);
             animation: shiftTagAppear 0.5s var(--transition-spring);
@@ -447,8 +479,8 @@
         }
 
         .location-title { 
-            color: var(--text-primary); 
-            font-size: 26px; 
+            color: var(--text-bright); 
+            font-size: 28px; 
             font-weight: 800;
             margin-bottom: var(--space-lg); 
             display: flex; 
@@ -458,16 +490,39 @@
         }
 
         .location-icon {
-            width: 44px;
-            height: 44px;
-            background: linear-gradient(135deg, var(--accent-emerald), rgba(52, 211, 153, 0.5));
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-emerald), rgba(110, 231, 183, 0.5));
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 20px;
+            color: var(--bg-primary);
+            box-shadow: 0 4px 24px var(--accent-emerald-glow);
+        }
+
+        /* Room Sub-section for Grouped Locations */
+        .room-group {
+            margin-top: var(--space-xl);
+            margin-left: var(--space-lg);
+            padding-left: var(--space-lg);
+            border-left: 3px solid var(--border-glass);
+        }
+
+        .room-title {
+            color: var(--text-secondary);
             font-size: 18px;
-            color: white;
-            box-shadow: 0 4px 20px var(--accent-emerald-glow);
+            font-weight: 700;
+            margin-bottom: var(--space-lg);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .room-title i {
+            color: var(--accent-indigo);
+            font-size: 16px;
         }
 
         /* Hero Stats Card */
@@ -533,28 +588,28 @@
         }
 
         .stat-icon {
-            width: 52px;
-            height: 52px;
+            width: 54px;
+            height: 54px;
             border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 22px;
+            font-size: 24px;
             flex-shrink: 0;
         }
 
         .stat-card.submitted .stat-icon {
-            background: rgba(52, 211, 153, 0.15);
+            background: rgba(110, 231, 183, 0.18);
             color: var(--accent-emerald);
         }
 
         .stat-card.not-submitted .stat-icon {
-            background: rgba(244, 63, 94, 0.15);
+            background: rgba(251, 113, 133, 0.18);
             color: var(--accent-crimson);
         }
 
         .stat-card.total .stat-icon {
-            background: rgba(129, 140, 248, 0.15);
+            background: rgba(165, 180, 252, 0.18);
             color: var(--accent-indigo);
         }
 
@@ -568,15 +623,15 @@
             font-size: 11px; 
             color: var(--text-muted); 
             text-transform: uppercase; 
-            letter-spacing: 0.08em;
-            font-weight: 600;
+            letter-spacing: 0.1em;
+            font-weight: 700;
         }
 
         .stat-value { 
-            font-size: 28px; 
+            font-size: 32px; 
             font-weight: 800;
             line-height: 1;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.03em;
         }
 
         .stat-card.submitted .stat-value { color: var(--accent-emerald); }
@@ -600,31 +655,31 @@
 
         .ring-wrapper {
             position: relative;
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
         }
 
         .progress-ring-svg {
             transform: rotate(-90deg);
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
         }
 
         .ring-bg {
             fill: none;
             stroke: var(--border-subtle);
-            stroke-width: 8;
+            stroke-width: 10;
         }
 
         .ring-progress {
             fill: none;
             stroke: url(#gradient-progress);
-            stroke-width: 8;
+            stroke-width: 10;
             stroke-linecap: round;
             stroke-dasharray: 339.292;
             stroke-dashoffset: 339.292;
             transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: drop-shadow(0 0 8px var(--accent-emerald-glow));
+            filter: drop-shadow(0 0 10px var(--accent-emerald-glow));
         }
 
         .ring-center {
@@ -636,9 +691,9 @@
         }
 
         .ring-percentage {
-            font-size: 28px;
+            font-size: 32px;
             font-weight: 800;
-            color: var(--text-primary);
+            color: var(--text-bright);
             line-height: 1;
         }
 
@@ -646,8 +701,8 @@
             font-size: 10px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-weight: 600;
+            letter-spacing: 0.12em;
+            font-weight: 700;
         }
 
         .ring-details {
@@ -660,17 +715,19 @@
             display: flex;
             align-items: center;
             gap: var(--space-sm);
-            font-size: 13px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
         }
 
         .detail-dot {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
         }
 
-        .detail-dot.done { background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald-glow); }
-        .detail-dot.pending { background: var(--accent-crimson); box-shadow: 0 0 8px var(--accent-crimson-glow); }
+        .detail-dot.done { background: var(--accent-emerald); box-shadow: 0 0 10px var(--accent-emerald-glow); }
+        .detail-dot.pending { background: var(--accent-crimson); box-shadow: 0 0 10px var(--accent-crimson-glow); }
 
         /* ============================================
            TEAMS GRID
@@ -695,7 +752,7 @@
 
         .team-card:hover {
             border-color: var(--border-subtle);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
         }
 
@@ -749,8 +806,8 @@
         }
 
         .team-name { 
-            color: var(--text-primary); 
-            font-size: 16px; 
+            color: var(--text-bright); 
+            font-size: 17px; 
             font-weight: 700;
             display: flex;
             align-items: center;
@@ -759,7 +816,7 @@
 
         .team-name i {
             color: var(--accent-indigo);
-            font-size: 14px;
+            font-size: 15px;
         }
         
         /* Status Badges - High End Design */
@@ -772,7 +829,7 @@
         }
 
         .badge { 
-            padding: 5px 12px; 
+            padding: 6px 14px; 
             border-radius: 9999px;
             display: inline-flex;
             align-items: center;
@@ -797,22 +854,22 @@
         }
 
         .badge-done { 
-            background: rgba(52, 211, 153, 0.12); 
+            background: rgba(110, 231, 183, 0.15); 
             color: var(--accent-emerald); 
-            border: 1px solid rgba(52, 211, 153, 0.25);
-            box-shadow: 0 0 12px rgba(52, 211, 153, 0.1);
+            border: 1px solid rgba(110, 231, 183, 0.35);
+            box-shadow: 0 0 14px rgba(110, 231, 183, 0.12);
         }
 
         .badge-not { 
-            background: rgba(244, 63, 94, 0.12); 
+            background: rgba(251, 113, 133, 0.15); 
             color: var(--accent-crimson); 
-            border: 1px solid rgba(244, 63, 94, 0.25);
-            box-shadow: 0 0 12px rgba(244, 63, 94, 0.1);
+            border: 1px solid rgba(251, 113, 133, 0.35);
+            box-shadow: 0 0 14px rgba(251, 113, 133, 0.12);
         }
 
         .badge-dot {
-            width: 6px;
-            height: 6px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: currentColor;
             animation: badgePulse 2s ease-in-out infinite;
@@ -824,8 +881,8 @@
         }
 
         .chevron-icon {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: var(--radius-sm);
             display: flex;
             align-items: center;
@@ -852,7 +909,7 @@
         }
 
         .team-card.active .chevron-icon {
-            background: rgba(129, 140, 248, 0.15);
+            background: rgba(165, 180, 252, 0.18);
             border-color: var(--accent-indigo);
             color: var(--accent-indigo);
         }
@@ -866,7 +923,7 @@
         }
 
         .team-card.active .team-content { 
-            max-height: 600px;
+            max-height: 800px;
             border-top: 1px solid var(--border-subtle);
         }
 
@@ -894,11 +951,11 @@
 
         .col-title { 
             font-size: 11px; 
-            font-weight: 700; 
+            font-weight: 800; 
             text-align: center; 
-            margin-bottom: var(--space-sm); 
+            margin-bottom: var(--space-md); 
             text-transform: uppercase; 
-            letter-spacing: 0.1em;
+            letter-spacing: 0.12em;
             padding-bottom: var(--space-sm);
             border-bottom: 2px solid;
             display: flex;
@@ -909,34 +966,34 @@
 
         .col-title.not-submit {
             color: var(--accent-crimson);
-            border-color: rgba(244, 63, 94, 0.3);
+            border-color: rgba(251, 113, 133, 0.35);
         }
 
         .col-title.submit {
             color: var(--accent-emerald);
-            border-color: rgba(52, 211, 153, 0.3);
+            border-color: rgba(110, 231, 183, 0.35);
         }
 
         .col-count {
             background: currentColor;
-            padding: 2px 8px;
+            padding: 3px 10px;
             border-radius: 9999px;
             font-size: 10px;
-            opacity: 0.2;
+            opacity: 0.25;
+            font-weight: 700;
         }
 
-        /* User Box Cards */
+        /* User Box Cards - FIXED LAYOUT */
         .user-box { 
-            padding: 12px 14px; 
+            padding: 14px 16px; 
             border-radius: var(--radius-sm); 
             font-size: 13px; 
             background: var(--bg-glass);
             border: 1px solid transparent;
             transition: all var(--transition-fast);
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: var(--space-sm);
+            flex-direction: column; /* Changed to vertical layout */
+            gap: 8px; /* Space between email and PC */
             animation: userBoxSlide 0.3s ease backwards;
             position: relative;
             overflow: hidden;
@@ -948,7 +1005,7 @@
             left: 0;
             top: 0;
             bottom: 0;
-            width: 3px;
+            width: 4px;
             transition: width var(--transition-fast);
         }
 
@@ -959,7 +1016,7 @@
         }
 
         .user-box:hover::before {
-            width: 4px;
+            width: 5px;
         }
 
         @keyframes userBoxSlide {
@@ -974,7 +1031,7 @@
         }
 
         .not-sub-box { 
-            border-left: 3px solid var(--accent-crimson);
+            border-left: 4px solid var(--accent-crimson);
         }
 
         .not-sub-box::before {
@@ -982,7 +1039,7 @@
         }
 
         .sub-box { 
-            border-left: 3px solid var(--accent-emerald);
+            border-left: 4px solid var(--accent-emerald);
         }
 
         .sub-box::before {
@@ -991,23 +1048,32 @@
 
         .u-email { 
             display: block; 
-            font-weight: 600; 
+            font-weight: 700; 
             overflow: hidden; 
             text-overflow: ellipsis; 
             white-space: nowrap;
-            font-size: 13px;
+            font-size: 14px;
+            color: var(--text-bright); /* Fixed: always bright */
+            line-height: 1.3;
         }
 
         .not-sub-box .u-email { color: var(--accent-crimson); }
         .sub-box .u-email { color: var(--accent-emerald); }
 
         .u-meta { 
-            font-size: 11px; 
-            color: var(--text-muted); 
-            font-weight: 500;
+            font-size: 13px; 
+            color: var(--text-secondary); /* Fixed: more visible */
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 8px;
+            word-break: break-all; /* Allow long PC names to wrap */
+            line-height: 1.4;
+        }
+
+        .u-meta i {
+            color: var(--text-muted);
+            font-size: 12px;
             flex-shrink: 0;
         }
 
@@ -1017,6 +1083,7 @@
             color: var(--text-muted);
             font-size: 13px;
             font-style: italic;
+            font-weight: 500;
         }
 
         /* ============================================
@@ -1087,7 +1154,12 @@
             }
 
             .location-title {
-                font-size: 20px;
+                font-size: 22px;
+            }
+
+            .room-group {
+                margin-left: var(--space-md);
+                padding-left: var(--space-md);
             }
         }
 
@@ -1117,7 +1189,7 @@
            ============================================ */
         ::selection {
             background: var(--accent-indigo);
-            color: white;
+            color: var(--bg-primary);
         }
     </style>
 </head>
@@ -1132,12 +1204,18 @@
 <svg style="position: absolute; width: 0; height: 0;">
     <defs>
         <linearGradient id="gradient-progress" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#818cf8"/>
-            <stop offset="50%" stop-color="#34d399"/>
-            <stop offset="100%" stop-color="#34d399"/>
+            <stop offset="0%" stop-color="#a5b4fc"/>
+            <stop offset="50%" stop-color="#6ee7b7"/>
+            <stop offset="100%" stop-color="#6ee7b7"/>
         </linearGradient>
     </defs>
 </svg>
+
+<!-- Silent Update Notification -->
+<div class="silent-update" id="silentUpdate">
+    <i class="fas fa-sync-alt"></i>
+    <span>Data updated</span>
+</div>
 
 <div class="app-container">
     <!-- Header -->
@@ -1160,7 +1238,7 @@
 
         <div class="controls">
             <div class="search-wrapper">
-                <input type="text" class="search-input" id="searchInput" placeholder="Search emails..." oninput="handleSearch()">
+                <input type="text" class="search-input" id="searchInput" placeholder="Search emails or PC..." oninput="handleSearch()">
                 <i class="fas fa-search search-icon"></i>
             </div>
             <select id="shiftFilter" onchange="renderData()">
@@ -1169,7 +1247,7 @@
             <select id="locFilter" onchange="renderData()">
                 <option value="all">All Locations</option>
             </select>
-            <input type="date" id="datePicker" onchange="fetchData()">
+            <input type="date" id="datePicker" onchange="fetchData(true)">
         </div>
     </header>
 
@@ -1196,7 +1274,21 @@
     const CONFIG = {
         API_URL: 'https://script.google.com/macros/s/AKfycbxmz0gT1rUXChCW42soPQXYtcpmir9reKAhnP9xKCvWii0adGkA7glu0WbQwVaAIisG/exec',
         REFRESH_INTERVAL: 5000,
-        ANIMATION_STAGGER_DELAY: 80
+        ANIMATION_STAGGER_DELAY: 80,
+        // Location grouping configuration
+        LOCATION_GROUPS: {
+            'Saint Fatima': [
+                'SF Floor 4 Room 1',
+                'SF Floor 4 Room 2',
+                'SF Floor 4 Room 3',
+                'SF Floor 4 Room 4',
+                'SF Floor 4 Room 6',
+                'SF Floor 4 Room 8',
+                'SF Floor 4 Room 9',
+                'SF Floor 4 Room 12',
+                'SF Floor 4 Room 13'
+            ]
+        }
     };
 
     // Application State
@@ -1204,7 +1296,9 @@
         rawData: {},
         openTeams: new Set(),
         searchTerm: '',
-        lastUpdateCount: 0
+        lastDataHash: '',
+        isFirstLoad: true,
+        isManualRefresh: false
     };
 
     // DOM Element References
@@ -1215,7 +1309,8 @@
         locFilter: null,
         datePicker: null,
         searchInput: null,
-        mainHeader: null
+        mainHeader: null,
+        silentUpdate: null
     };
 
     /**
@@ -1232,15 +1327,16 @@
         elements.datePicker = document.getElementById('datePicker');
         elements.searchInput = document.getElementById('searchInput');
         elements.mainHeader = document.getElementById('mainHeader');
+        elements.silentUpdate = document.getElementById('silentUpdate');
 
         // Set default date to today
         elements.datePicker.value = new Date().toISOString().split('T')[0];
 
-        // Initial data fetch
-        fetchData();
+        // Initial data fetch (show loader)
+        fetchData(true);
 
-        // Set up auto-refresh interval
-        setInterval(fetchData, CONFIG.REFRESH_INTERVAL);
+        // Set up auto-refresh interval (silent updates)
+        setInterval(() => fetchData(false), CONFIG.REFRESH_INTERVAL);
 
         // Keyboard shortcut for search (Ctrl/Cmd + K)
         document.addEventListener('keydown', (e) => {
@@ -1253,51 +1349,111 @@
 
     /**
      * ============================================
-     * API & DATA FETCHING
+     * API & DATA FETCHING - SILENT UPDATE SYSTEM
      * ============================================
      */
-    async function fetchData() {
+    async function fetchData(showLoader = false, isManual = false) {
         const date = formatDateForAPI(elements.datePicker.value);
         
         try {
-            showLoader(true);
+            if (showLoader || isManual) {
+                showLoader(true);
+            }
             
             const response = await fetch(`${CONFIG.API_URL}?date=${date}`);
             const json = await response.json();
             
-            // Check for data changes and trigger pulse if needed
-            const newDataCount = countTotalEntries(json.data);
-            if (state.lastUpdateCount > 0 && newDataCount !== state.lastUpdateCount) {
-                triggerUpdatePulse();
+            const newData = json.data || {};
+            
+            // Generate hash to detect changes
+            const newDataHash = generateDataHash(newData);
+            
+            // Check if data actually changed
+            if (newDataHash !== state.lastDataHash) {
+                // Data changed - update state
+                state.rawData = newData;
+                state.lastDataHash = newDataHash;
+                
+                // Only show full re-render on first load or manual refresh
+                if (state.isFirstLoad || isManual) {
+                    updateFilters();
+                    renderData();
+                    state.isFirstLoad = false;
+                    
+                    if (showLoader || isManual) {
+                        showLoader(false);
+                    }
+                } else {
+                    // Silent update - show notification only
+                    showSilentUpdateNotification();
+                    // Smart update: preserve UI state while updating numbers
+                    smartUpdateUI();
+                }
+            } else {
+                // No change in data
+                if (showLoader || isManual) {
+                    showLoader(false);
+                }
             }
-            state.lastUpdateCount = newDataCount;
-
-            state.rawData = json.data || {};
             
-            updateFilters();
-            renderData();
-            
-            showLoader(false);
         } catch (error) {
             console.error("Data fetch failed:", error);
-            showLoader(false);
+            if (showLoader || isManual) {
+                showLoader(false);
+            }
         }
+    }
+
+    /**
+     * Generate a simple hash of the data to detect changes
+     */
+    function generateDataHash(data) {
+        let hash = '';
+        Object.keys(data).forEach(shift => {
+            Object.keys(data[shift]).forEach(loc => {
+                Object.values(data[shift][loc]).forEach(team => {
+                    hash += `${team.submitted.length}-${team.notSubmitted.length}`;
+                });
+            });
+        });
+        return hash;
+    }
+
+    /**
+     * Show silent update notification
+     */
+    function showSilentUpdateNotification() {
+        if (elements.silentUpdate) {
+            elements.silentUpdate.classList.add('show');
+            setTimeout(() => {
+                elements.silentUpdate.classList.remove('show');
+            }, 2500);
+        }
+    }
+
+    /**
+     * Smart UI update - updates numbers without breaking UI state
+     */
+    function smartUpdateUI() {
+        // Update stat values without re-rendering entire UI
+        document.querySelectorAll('.stat-value').forEach(el => {
+            el.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                el.style.transform = 'scale(1)';
+            }, 200);
+        });
+        
+        // Subtle pulse on progress rings
+        document.querySelectorAll('.ring-progress').forEach(el => {
+            el.style.filter = 'drop-shadow(0 0 15px var(--accent-emerald-glow))';
+            setTimeout(() => {
+                el.style.filter = 'drop-shadow(0 0 10px var(--accent-emerald-glow))';
+            }, 500);
+        });
     }
 
     function formatDateForAPI(dateString) {
         return dateString.split('-').reverse().join('-');
-    }
-
-    function countTotalEntries(data) {
-        let count = 0;
-        Object.values(data).forEach(shift => {
-            Object.values(shift).forEach(location => {
-                Object.values(location).forEach(team => {
-                    count += team.submitted.length + team.notSubmitted.length;
-                });
-            });
-        });
-        return count;
     }
 
     function showLoader(show) {
@@ -1313,10 +1469,15 @@
         const shifts = new Set();
         const locations = new Set();
 
-        // Extract unique shifts and locations
+        // Extract unique shifts and locations (including grouped ones)
         Object.keys(state.rawData).forEach(shift => {
             shifts.add(shift);
             Object.keys(state.rawData[shift]).forEach(loc => locations.add(loc));
+        });
+
+        // Add grouped locations to filter
+        Object.keys(CONFIG.LOCATION_GROUPS).forEach(groupName => {
+            locations.add(groupName);
         });
 
         // Preserve current selections
@@ -1325,7 +1486,7 @@
 
         // Update Shift Filter
         elements.shiftFilter.innerHTML = '<option value="all">All Shifts</option>';
-        shifts.forEach(shift => {
+        Array.from(shifts).sort().forEach(shift => {
             const option = document.createElement('option');
             option.value = shift;
             option.textContent = `Shift: ${shift}`;
@@ -1333,15 +1494,49 @@
             elements.shiftFilter.appendChild(option);
         });
 
-        // Update Location Filter
+        // Update Location Filter (with groups first)
         elements.locFilter.innerHTML = '<option value="all">All Locations</option>';
-        locations.forEach(loc => {
+        
+        // Add group options
+        Object.keys(CONFIG.LOCATION_GROUPS).sort().forEach groupName => {
+            const option = document.createElement('option');
+            option.value = groupName;
+            option.textContent = `📍 ${groupName}`;
+            option.style.fontWeight = 'bold';
+            if (groupName === currentLoc) option.selected = true;
+            elements.locFilter.appendChild(option);
+        });
+        
+        // Add individual locations that aren't part of groups
+        Array.from(locations).filter(loc => 
+            !Object.values(CONFIG.LOCATION_GROUPS).flat().includes(loc) &&
+            !Object.keys(CONFIG.LOCATION_GROUPS).includes(loc)
+        ).sort().forEach(loc => {
             const option = document.createElement('option');
             option.value = loc;
             option.textContent = loc;
             if (loc === currentLoc) option.selected = true;
             elements.locFilter.appendChild(option);
         });
+    }
+
+    /**
+     * Check if a location belongs to a group
+     */
+    function getLocationGroup(locationName) {
+        for (const [groupName, members] of Object.entries(CONFIG.LOCATION_GROUPS)) {
+            if (members.includes(locationName)) {
+                return groupName;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Get all locations belonging to a group
+     */
+    function getGroupLocations(groupName) {
+        return CONFIG.LOCATION_GROUPS[groupName] || [];
     }
 
     /**
@@ -1393,6 +1588,10 @@
 
         let globalAnimationIndex = 0;
 
+        // Check if we're viewing a group
+        const isGroupView = selectedLocation !== 'all' && 
+                           CONFIG.LOCATION_GROUPS.hasOwnProperty(selectedLocation);
+
         // Iterate through shifts
         for (const [shift, locations] of Object.entries(state.rawData)) {
             if (selectedShift !== 'all' && shift !== selectedShift) continue;
@@ -1406,27 +1605,59 @@
                 </div>
             `;
 
-            // Iterate through locations
-            for (const [locName, teams] of Object.entries(locations)) {
-                if (selectedLocation !== 'all' && locName !== selectedLocation) continue;
-
-                // Calculate location statistics
-                const stats = calculateLocationStats(teams);
-                
-                // Apply staggered animation delay
-                globalAnimationIndex++;
-                const animDelay = globalAnimationIndex * CONFIG.ANIMATION_STAGGER_DELAY;
-
-                // Create location section
-                const locationSection = createLocationSection(
-                    locName, 
-                    teams, 
-                    stats, 
-                    shift, 
-                    animDelay
+            if (isGroupView) {
+                // Render as grouped view under the selected group
+                const groupSection = createGroupedLocationSection(
+                    selectedLocation,
+                    shift,
+                    locations,
+                    globalAnimationIndex
                 );
+                if (groupSection) {
+                    shiftWrapper.appendChild(groupSection);
+                }
+            } else {
+                // Normal rendering with potential sub-grouping
+                const renderedLocations = new Set();
+                
+                // First pass: handle grouped locations
+                Object.keys(CONFIG.LOCATION_GROUPS).forEach(groupName => {
+                    if (selectedLocation !== 'all' && selectedLocation !== groupName) return;
+                    
+                    const groupMembers = CONFIG.LOCATION_GROUPS[groupName];
+                    const availableMembers = groupMembers.filter(loc => locations.hasOwnProperty(loc));
+                    
+                    if (availableMembers.length > 0) {
+                        globalAnimationIndex++;
+                        const groupSection = createGroupedLocationSection(
+                            groupName,
+                            shift,
+                            locations,
+                            globalAnimationIndex,
+                            availableMembers
+                        );
+                        shiftWrapper.appendChild(groupSection);
+                        availableMembers.forEach(loc => renderedLocations.add(loc));
+                    }
+                });
 
-                shiftWrapper.appendChild(locationSection);
+                // Second pass: handle non-grouped locations
+                for (const [locName, teams] of Object.entries(locations)) {
+                    if (selectedLocation !== 'all' && locName !== selectedLocation) continue;
+                    if (renderedLocations.has(locName)) continue; // Skip already rendered
+                    
+                    globalAnimationIndex++;
+                    const animDelay = globalAnimationIndex * CONFIG.ANIMATION_STAGGER_DELAY;
+
+                    const locationSection = createLocationSection(
+                        locName, 
+                        teams, 
+                        shift, 
+                        animDelay
+                    );
+
+                    shiftWrapper.appendChild(locationSection);
+                }
             }
 
             elements.dashboard.appendChild(shiftWrapper);
@@ -1435,12 +1666,91 @@
         // Handle empty state
         if (Object.keys(state.rawData).length === 0) {
             elements.dashboard.innerHTML = `
-                <div class="empty-state" style="padding: 60px;">
-                    <i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
-                    <p>No data available for the selected filters.</p>
+                <div class="empty-state" style="padding: 80px; text-align: center;">
+                    <i class="fas fa-inbox" style="font-size: 56px; margin-bottom: 20px; opacity: 0.25; display: block;"></i>
+                    <p style="font-size: 16px;">No data available for the selected filters.</p>
                 </div>
             `;
         }
+    }
+
+    /**
+     * Create a grouped location section (e.g., Saint Fatima with rooms)
+     */
+    function createGroupedLocationSection(groupName, shift, allLocations, delayIndex, specificRooms = null) {
+        const roomsToRender = specificRooms || getGroupLocations(groupName);
+        const availableRooms = roomsToRender.filter(room => allLocations.hasOwnProperty(room));
+        
+        if (availableRooms.length === 0) return null;
+
+        const section = document.createElement('div');
+        section.className = 'location-section';
+        section.style.animationDelay = `${delayIndex * CONFIG.ANIMATION_STAGGER_DELAY}ms`;
+
+        // Calculate combined stats for the group
+        let totalSubmitted = 0;
+        let totalNotSubmitted = 0;
+        const roomData = {};
+
+        availableRooms.forEach(roomName => {
+            const teams = allLocations[roomName];
+            roomData[roomName] = teams;
+            
+            Object.values(teams).forEach(team => {
+                totalSubmitted += team.submitted.length;
+                totalNotSubmitted += team.notSubmitted.length;
+            });
+        });
+
+        const total = totalSubmitted + totalNotSubmitted;
+        const percentage = total > 0 ? Math.round((totalSubmitted / total) * 100) : 0;
+
+        // Build HTML
+        let html = `
+            <div class="location-title">
+                <div class="location-icon">
+                    <i class="fas fa-building"></i>
+                </div>
+                ${groupName}
+                <span style="font-size: 14px; color: var(--text-muted); font-weight: 600;">
+                    (${availableRooms.length} rooms)
+                </span>
+            </div>
+        `;
+
+        // Hero stats for the whole group
+        html += createHeroStatsHTML({
+            submitted: totalSubmitted,
+            notSubmitted: totalNotSubmitted,
+            total,
+            percentage
+        });
+
+        // Room sub-sections
+        html += '<div class="room-group">';
+        
+        availableRooms.forEach((roomName, idx) => {
+            const teams = roomData[roomName];
+            const roomDelay = (delayIndex * CONFIG.ANIMATION_STAGGER_DELAY) + ((idx + 1) * 100);
+            
+            html += `
+                <div class="room-subsection" style="animation: sectionAppear 0.5s ease ${roomDelay}ms backwards;">
+                    <div class="room-title">
+                        <i class="fas fa-door-open"></i>
+                        ${roomName}
+                    </div>
+            `;
+            
+            // Teams grid for this room
+            html += createTeamsGridHTML(teams, shift, roomName, idx);
+            
+            html += '</div>'; // Close room-subsection
+        });
+        
+        html += '</div>'; // Close room-group
+
+        section.innerHTML = html;
+        return section;
     }
 
     /**
@@ -1473,10 +1783,13 @@
      * UI COMPONENT BUILDERS
      * ============================================
      */
-    function createLocationSection(locName, teams, stats, shift, delay) {
+    function createLocationSection(locName, teams, shift, delay) {
         const section = document.createElement('div');
         section.className = 'location-section';
         section.style.animationDelay = `${delay}ms`;
+
+        // Calculate stats
+        const stats = calculateLocationStats(teams);
 
         // Location Title
         const titleHTML = `
@@ -1564,7 +1877,7 @@
         `;
     }
 
-    function createTeamsGridHTML(teams, shift, locName) {
+    function createTeamsGridHTML(teams, shift, locName, roomIndex = 0) {
         let teamsHTML = '<div class="teams-grid">';
         let cardIndex = 0;
 
@@ -1586,10 +1899,10 @@
             }
 
             cardIndex++;
-            const cardDelay = cardIndex * 60;
+            const baseDelay = (roomIndex + 1) * 60 + cardIndex * 60;
 
             teamsHTML += `
-                <div class="team-card ${isActive}" id="${tlID}" style="animation-delay: ${cardDelay}ms;">
+                <div class="team-card ${isActive}" id="${tlID}" style="animation-delay: ${baseDelay}ms;">
                     <div class="team-header" onclick="toggleTeam('${tlID}')">
                         <div class="tl-info">
                             <span class="team-name">
@@ -1651,9 +1964,7 @@
         const delay = index * 40;
         return `
             <div class="user-box ${type}-box" style="animation-delay: ${delay}ms;">
-                <div>
-                    <span class="u-email">${escapeHTML(user.email)}</span>
-                </div>
+                <span class="u-email">${escapeHTML(user.email)}</span>
                 <span class="u-meta">
                     <i class="fas fa-desktop"></i>
                     PC: ${escapeHTML(user.pc)}
@@ -1675,13 +1986,6 @@
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
-    }
-
-    function triggerUpdatePulse() {
-        elements.mainHeader.classList.add('pulse-update');
-        setTimeout(() => {
-            elements.mainHeader.classList.remove('pulse-update');
-        }, 600);
     }
 
     /**
